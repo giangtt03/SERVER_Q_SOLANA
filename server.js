@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const mongoose = require('mongoose');
 const favicon = require('express-favicon');
+const methodOverride = require('method-override');
 
 
 const app = express();
@@ -29,6 +30,9 @@ mongoose.connect(process.env.MONGO_URL).then(()=>{
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: false }));
+
+app.use(methodOverride('_method'));
 
 //ghi log các yêu cầu HTTP
 app.use(morgan('dev'));
@@ -39,9 +43,12 @@ app.use(cookieParser());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+// console.log("Views directory:", app.get('views'));
+
 const authRouter = require('./routes/auth');
+const categoryRouter = require('./routes/category');
 
 
 app.use('/', authRouter);
-
+app.use('/category', categoryRouter);
 app.listen(process.env.PORT || port, () => console.log(`Server listening on ${process.env.PORT}!`));
