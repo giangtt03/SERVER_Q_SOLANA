@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif, sans-serif;
+        }
+
+        /* Sidebar styles */
+
+        .sidebar {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #f8f9fa;
+            padding-top: 3rem;
+            overflow-y: auto;
+            z-index: 1;
+        }
+
+        .sidebar-nav-link {
+            padding: 10px;
+            color: #000;
+            text-decoration: none;
+            display: block;
+        }
+
+        .sidebar-nav-link:hover {
+            background-color: #e9ecef;
+        }
+
+        .sidebar-brand {
+            padding: 20px;
+            font-weight: bold;
+            color: #000;
+            text-decoration: none;
+        }
+
+    </style>
+</head>
+
+<body>
+    
+    <!-- Vertical Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-nav-link active">
+            <div style="width: 100px; height: 100px; overflow: hidden; border-radius: 50%; margin-bottom: 10px;">
+                <img src="<%= user.avatar %>" alt="User Avatar" style="width: 100%; height: auto;">
+            </div>
+            <p style="margin-bottom: 1em;"><%= user.email %></p>
+        </div>
+
+        <a href="#" class="sidebar-nav-link active">Quản lý </a>
+        <a href="#" class="sidebar-nav-link">Quản lý </a>
+        <a href="#" class="sidebar-nav-link">Quản lý </a>
+        <a href="#" class="sidebar-nav-link">Quản lý </a>
+        <a href="#" class="sidebar-nav-link">Quản lý</a>
+        <a href="#" class="sidebar-nav-link">Quản lý</a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
