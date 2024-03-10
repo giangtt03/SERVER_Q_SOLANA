@@ -1,5 +1,16 @@
 const mongoose = require('mongoose');
 
+const AnswerSchema = new mongoose.Schema({
+  answer: {
+    type: String,
+    required: true,
+  },
+  correct: {
+    type: String,
+    required: true,
+  }
+});
+
 const QuestionSchema = new mongoose.Schema({
   content: {
     type: String,
@@ -10,16 +21,7 @@ const QuestionSchema = new mongoose.Schema({
     ref: 'Category',
     required: true,
   },
-  answers: [{
-    content: {
-      type: String,
-      required: true,
-    },
-    isCorrect: {
-      type: Boolean,
-      required: true,
-    },
-  }],
+  answers: [AnswerSchema],
 });
 
 module.exports = mongoose.model('Question', QuestionSchema);

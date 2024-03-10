@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Question</title>
+</head>
+<body>
+    <h1>Update Question</h1>
+    <form action="/question/<%= question._id %>" method="POST">
+        <label for="content">Content:</label>
+        <input type="text" id="content" name="content" value="<%= question.content %>" required>
+        <label for="category">Category:</label>
+        <select id="category" name="category" required>
+            <% categories.forEach(category => { %>
+                <option value="<%= category._id %>" <%= category._id.toString() === question.category.toString() ? 'selected' : '' %>><%= category.name %></option>
+            <% }); %>
+        </select>
+        <button type="submit">Update</button>
+    </form>
+</body>
+</html>

@@ -54,6 +54,8 @@ module.exports = {
         req.session.user = user;
         req.session.token = token;
 
+        console.log("Data user: ", user)
+
         res.render('menu', { user: user});
 
     } catch (error) {
