@@ -14,6 +14,9 @@ const methodOverride = require('method-override');
 const app = express();
 const port = 3000;
 
+app.use(cors());
+
+
 dotenv.config();
 
 app.use(session({
@@ -22,15 +25,17 @@ app.use(session({
     saveUninitialized: true
 }));
 
-// app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(favicon(__dirname + '/public/faviacon.ico'));
 
 mongoose.connect(process.env.MONGO_URL).then(()=>{
     console.log('Db connected')
 }).catch((err)=> console.log(err));
 
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(express.urlencoded({ extended: false }));
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use(methodOverride('_method'));
 
@@ -47,8 +52,10 @@ app.set('view engine', 'ejs');
 
 const authRouter = require('./routes/auth');
 const categoryRouter = require('./routes/category');
-
+const questionRouter = require('./routes/question');
 
 app.use('/', authRouter);
 app.use('/category', categoryRouter);
+app.use('/question', questionRouter);
+
 app.listen(process.env.PORT || port, () => console.log(`Server listening on ${process.env.PORT}!`));

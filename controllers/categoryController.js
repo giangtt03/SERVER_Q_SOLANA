@@ -3,10 +3,10 @@ const Category = require('../models/Category');
 module.exports = {
   getCreateCategoryForm: (req, res) => {
     const user = req.session.user;
-    console.log("User:", user); // Log user để kiểm tra xem liệu user có tồn tại không
+    console.log("User:", user);
     res.render('category/createCategory', { user });
   },
-  
+
   createCategory: async (req, res) => {
     try {
       const { name } = req.body;
@@ -17,18 +17,37 @@ module.exports = {
       res.status(500).json({ error: error.message });
     }
   },
-  
 
-  updateCategory: async (req, res) => {
+  getUpdateCategoryForm: async (req, res) => {
     try {
+      const user = req.session.user;
       const { id } = req.params;
-      const { name } = req.body;
-      const updatedCategory = await Category.findByIdAndUpdate(id, { name }, { new: true });
-      res.json(updatedCategory);
+      const category = await Category.findById(id);
+      if (!category) {
+        return res.status(404).json({ error: 'Category not found' });
+      }
+      res.render('category/updateCategory', { category, user });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   },
+
+  updateCategory: async (req, res) => {
+    try {
+      const { id } = req.params;
+      // console.log("Category ID:", id);
+      const { name } = req.body;
+      // console.log("name:", name); 
+      const updatedCategory = await Category.findByIdAndUpdate(id, { name }, { new: true });
+      // console.log("Updated category:", updatedCategory);
+      res.json(updatedCategory);
+    } catch (error) {
+      console.error('Error updating category:', error);
+      res.status(500).json({ error: error.message });
+    }
+  },
+  
+  
 
   deleteCategory: async (req, res) => {
     try {
@@ -56,7 +75,6 @@ module.exports = {
   getAllCategories: async (req, res) => {
     try {
       const categories = await Category.find();
-      // Truyền thông tin user qua session vào template
       const user = req.session.user;
       res.render('category/getAllCategory', { categories, user });
     } catch (error) {
