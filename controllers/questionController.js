@@ -102,7 +102,7 @@ module.exports = {
             const totalPages = Math.ceil(count / limit); // Tính số trang
             const categories = await Category.find();
             const user = req.session.user;
-            res.render('question/getAllQuestions', { questions, categories, user, totalPages, currentPage: page });
+            res.render('question/getAllQuestions', { questions, categories, user, totalPages, currentPage: page, totalQuestions: count  });
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
@@ -112,8 +112,9 @@ module.exports = {
         try {
             const { categoryId } = req.params;
             const questions = await Question.find({ category: categoryId }).populate('category');
+            const totalQuestions = await Question.countDocuments({ category: categoryId }); 
             const user = req.session.user;
-            res.render('question/getAllQuestions', { questions, user });
+            res.render('question/getAllQuestions', { questions, user, totalQuestions });
         } catch (error) {
             res.status(500).json({ message: error.message });
         }

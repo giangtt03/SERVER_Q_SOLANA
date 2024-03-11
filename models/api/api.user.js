@@ -23,11 +23,6 @@ const UserSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  role: {
-    type: String,
-    enum: ['staff', 'admin'],
-    default: 'staff',
-  },
 });
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('TKNguoiDung', UserSchema);

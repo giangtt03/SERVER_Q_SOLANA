@@ -53,9 +53,17 @@ app.set('view engine', 'ejs');
 const authRouter = require('./routes/auth');
 const categoryRouter = require('./routes/category');
 const questionRouter = require('./routes/question');
+const testRouter = require('./routes/test');
+
+//api o fday
+const apiAuthRouter = require('./routes/api/api.auth');
 
 app.use('/', authRouter);
 app.use('/category', categoryRouter);
 app.use('/question', questionRouter);
+app.use('/test', testRouter);
+
+//api o fday
+app.use('/api', apiAuthRouter);
 
 app.listen(process.env.PORT || port, () => console.log(`Server listening on ${process.env.PORT}!`));
