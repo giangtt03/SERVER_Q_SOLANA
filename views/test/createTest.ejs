@@ -24,8 +24,6 @@
 
         <div id="questionList"></div>
         <label for="questions">Questions:</label>
-        <!-- Checkbox for selecting questions from a list -->
-        <!-- Loop through available questions -->
         <% questions.forEach(question=> { %>
             <input type="checkbox" id="<%= question._id %>" name="questions" value="<%= question.content %>">
             <label for="<%= question._id %>">
@@ -70,11 +68,10 @@
         });
         const data = await response.json();
 
-        // Duyệt qua danh sách câu hỏi và kiểm tra category
         data.forEach(question => {
             const checkbox = document.getElementById(question._id);
             if (checkbox) {
-                checkbox.checked = true; // Tích vào ô checkbox
+                checkbox.checked = true; 
             }
         });
     }

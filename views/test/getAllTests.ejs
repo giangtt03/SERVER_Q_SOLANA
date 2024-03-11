@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Tests</title>
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    
+    <title>All Questions</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        body {
+            margin: 0;
+            font-family: 'Arial';
+            display: flex;
+        }
+
         /* Sidebar styles */
         .sidebar {
             height: 100%;
@@ -40,27 +44,46 @@
             text-decoration: none;
         }
 
-        /* Centering form horizontally */
-        form {
+        /* Main content styles */
+        main {
+            margin-left: 288px;
+            padding: 20px;
+        }
+
+        /* Table styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+            word-wrap: break-word;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        td {
             max-width: 600px;
-            margin: 0 auto;
-        }
 
-        /* Additional styles for Bootstrap */
-        .form-control {
-            margin-bottom: 10px;
-        }
-
-        .btn {
-            margin-right: 5px;
         }
     </style>
 </head>
+
 <body>
     <div class="sidebar">
         <div class="sidebar-nav-link active">
             <div style="width: 100px; height: 100px; overflow: hidden; border-radius: 50%; margin-bottom: 10px;">
-                <img src="<%= user.avatar %>" alt="User Avatar" class="img-fluid rounded-circle">
+                <img src="<%= user.avatar %>" alt="User Avatar" style="width: 100%; height: auto;">
             </div>
             <p style="margin-bottom: 1em;">
                 <%= user.email %>
@@ -74,42 +97,45 @@
         <a href="#" class="sidebar-nav-link">Quản lý</a>
         <a href="#" class="sidebar-nav-link">Quản lý</a>
     </div>
-    <div class="container">
-        <h1>All Tests</h1>
-        <ul class="list-unstyled">
-            <% tests.forEach(test => { %>
-                <li class="my-4">
-                    <strong>Name:</strong> <%= test.name %><br>
-                    <strong>Category:</strong> <%= test.category.name %><br>
-                    <% if (test.questions && test.questions.length > 0) { %>
-                        <strong>Questions:</strong><br>
-                        <ul>
-                            <% test.questions.forEach(question => { %>
-                                <li>
-                                    <%= question.content %><br>
-                                    <strong>Answers:</strong><br>
-                                    <% if (question.answers && question.answers.length > 0) { %>
-                                        <ul>
-                                            <% question.answers.forEach(answer => { %>
-                                                <li><%= answer.answer %> - <%= answer.correct ? 'Correct' : 'Incorrect' %></li>
-                                            <% }); %>
-                                        </ul>
-                                    <% } else { %>
-                                        <p>No answers found for this question.</p>
-                                    <% } %>
-                                </li>
-                            <% }); %>
-                        </ul>
-                    <% } else { %>
-                        <p>No questions found for this test.</p>
-                    <% } %>
-                </li>
-            <% }); %>
-        </ul>
-    </div>
-    <!-- Bootstrap JS -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <main>
+        <h1 style="align-items: center; justify-content: center; margin-left: 450px; padding: 15px;">Danh sách bài thi</h1>
+        <% if (typeof totalTests !== 'undefined') { %>
+        <p id="totalTests">Tổng số bài thi: <%= totalTests %></p>
+        <% } %>
+
+        <!-- Displaying test names and categories -->
+        <% tests.forEach(test => { %>
+            <div>
+                <h2><%= test.name %></h2>
+                <p><strong>Category:</strong> <%= test.category.name %></p>
+                <% if (test.questions && test.questions.length > 0) { %>
+                    <% test.questions.forEach(question => { %>
+                        <div>
+                            <p><strong>Question:</strong> <%= question.content %></p>
+                            <ul>
+                                <% question.answers.forEach(answer => { %>
+                                    <li>
+                                        <%= answer.answer %> -
+                                        <% if (answer.correct === 'true') { %>
+                                            <span style="color: green;">Correct</span>
+                                        <% } else { %>
+                                            <span style="color: red;">Incorrect</span>
+                                        <% } %>
+                                    </li>
+                                <% }); %>
+                            </ul>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <p>No questions found for this test</p>
+                <% } %>
+            </div>
+        <% }); %>
+        
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

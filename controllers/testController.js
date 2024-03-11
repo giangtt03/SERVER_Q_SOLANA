@@ -68,15 +68,17 @@ module.exports = {
             const tests = await Test.find().populate({
                 path: 'questions',
                 populate: {
-                    path: 'answers' // Populate cả trường answers trong questions
+                    path: 'answers' 
                 }
             }).populate('category');
+            const totalTests = tests.length;
             const user = req.session.user;
-            res.render('test/getAllTests', { tests, user }); // Trả về template getAllTests.ejs với dữ liệu tests đã được populate đầy đủ
+            res.render('test/getAllTests', { tests, totalTests, user });
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
     },
+    
     
 
     updateTest: async (req, res) => {
