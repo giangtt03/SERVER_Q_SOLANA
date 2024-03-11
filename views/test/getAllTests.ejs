@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Tests</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
+    <style>
+        /* Sidebar styles */
+        .sidebar {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #f8f9fa;
+            padding-top: 3rem;
+            overflow-y: auto;
+            z-index: 1;
+        }
+
+        .sidebar-nav-link {
+            padding: 10px;
+            color: #000;
+            text-decoration: none;
+            display: block;
+        }
+
+        .sidebar-nav-link:hover {
+            background-color: #e9ecef;
+        }
+
+        .sidebar-brand {
+            padding: 20px;
+            font-weight: bold;
+            color: #000;
+            text-decoration: none;
+        }
+
+        /* Centering form horizontally */
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Additional styles for Bootstrap */
+        .form-control {
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-nav-link active">
+            <div style="width: 100px; height: 100px; overflow: hidden; border-radius: 50%; margin-bottom: 10px;">
+                <img src="<%= user.avatar %>" alt="User Avatar" class="img-fluid rounded-circle">
+            </div>
+            <p style="margin-bottom: 1em;">
+                <%= user.email %>
+            </p>
+        </div>
+
+        <a href="http://localhost:6002/question" class="sidebar-nav-link active">Quản lý câu hỏi</a>
+        <a href="http://localhost:6002/category" class="sidebar-nav-link">Danh sách thể loại </a>
+        <a href="http://localhost:6002/test" class="sidebar-nav-link">Quản lý quizz </a>
+        <a href="#" class="sidebar-nav-link">Quản lý </a>
+        <a href="#" class="sidebar-nav-link">Quản lý</a>
+        <a href="#" class="sidebar-nav-link">Quản lý</a>
+    </div>
+    <div class="container">
+        <h1>All Tests</h1>
+        <ul class="list-unstyled">
+            <% tests.forEach(test => { %>
+                <li class="my-4">
+                    <strong>Name:</strong> <%= test.name %><br>
+                    <strong>Category:</strong> <%= test.category.name %><br>
+                    <% if (test.questions && test.questions.length > 0) { %>
+                        <strong>Questions:</strong><br>
+                        <ul>
+                            <% test.questions.forEach(question => { %>
+                                <li>
+                                    <%= question.content %><br>
+                                    <strong>Answers:</strong><br>
+                                    <% if (question.answers && question.answers.length > 0) { %>
+                                        <ul>
+                                            <% question.answers.forEach(answer => { %>
+                                                <li><%= answer.answer %> - <%= answer.correct ? 'Correct' : 'Incorrect' %></li>
+                                            <% }); %>
+                                        </ul>
+                                    <% } else { %>
+                                        <p>No answers found for this question.</p>
+                                    <% } %>
+                                </li>
+                            <% }); %>
+                        </ul>
+                    <% } else { %>
+                        <p>No questions found for this test.</p>
+                    <% } %>
+                </li>
+            <% }); %>
+        </ul>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

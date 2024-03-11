@@ -1,9 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const testController = require('../controllers/testController');
+const sessionMiddleware = require('../middleware/sessionMiddleware');
+
+// Middleware để kiểm tra session
+router.use(sessionMiddleware);
 
 
-router.post('/create', testController.createTest);
+router.post('/questions/category/:categoryId', testController.getQuestionsByCategory);
+
+router.get('/create', testController.renderQuestionList);
 router.post('/create', testController.createTest);
 
 router.get('/:id', testController.getTestById);

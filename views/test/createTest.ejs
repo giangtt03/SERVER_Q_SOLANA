@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Test</title>
+</head>
+
+<body>
+    <h1>Create Test</h1>
+    <form action="/test/create" method="POST">
+        <label for="name">Test Name:</label>
+        <input type="text" id="name" name="name" required>
+        <label for="category">Category:</label>
+        <select id="categorySelect" name="category" onchange="getQuestionsBySelectedCategory()">
+            <% categories.forEach(category=> { %>
+                <option value="<%= category._id %>">
+                    <%= category.name %>
+                </option>
+            <% }); %>
+        </select>
+        
+
+        <div id="questionList"></div>
+        <label for="questions">Questions:</label>
+        <!-- Checkbox for selecting questions from a list -->
+        <!-- Loop through available questions -->
+        <% questions.forEach(question=> { %>
+            <input type="checkbox" id="<%= question._id %>" name="questions" value="<%= question.content %>">
+            <label for="<%= question._id %>">
+                <%= question.content %>
+            </label><br>
+            <% }); %>
+                <!-- End loop -->
+                <button type="submit">Create</button>
+    </form>
+
+    <!-- <script>
+        function getQuestionsByCategory(categoryId) {
+            console.log('categoryId:', categoryId); 
+            const questionListContainer = document.getElementById('questionList');
+            if (categoryId) {
+                fetch(`/questions/category/${categoryId}`)
+                    .then(response => response.json())
+                    .then(questions => {
+                        questionListContainer.innerHTML = '<label>Questions:</label>';
+                        questions.forEach(question => {
+                            questionListContainer.innerHTML += `
+                        <input type="checkbox" id="${question._id}" name="questions" value="${question.content}">
+                        <label for="${question._id}">${question.content}</label><br>`;
+                        });
+                    })
+                    .catch(error => console.error('Error fetching questions:', error));
+            } else {
+                questionListContainer.innerHTML = '';
+            }
+        }
+
+
+    </script> -->
+    <script>
+    async function getQuestionsBySelectedCategory() {
+        const categoryId = document.getElementById('categorySelect').value;
+        const response = await fetch(`/question/category/${categoryId}/json`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
+
+        // Duyệt qua danh sách câu hỏi và kiểm tra category
+        data.forEach(question => {
+            const checkbox = document.getElementById(question._id);
+            if (checkbox) {
+                checkbox.checked = true; // Tích vào ô checkbox
+            }
+        });
+    }
+</script>
+
+</body>
+
+</html>
