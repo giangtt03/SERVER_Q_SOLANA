@@ -10,7 +10,6 @@ const mongoose = require('mongoose');
 const favicon = require('express-favicon');
 const methodOverride = require('method-override');
 
-
 const app = express();
 const port = 3000;
 
@@ -67,8 +66,7 @@ app.use('/test', testRouter);
 
 //api o fday
 app.use('/api', apiAuthRouter);
-app.use('/api', apiTestRouter);
+app.use('/api/quizz', apiTestRouter);
 app.use('/api/score', apiScoreRouter);
-
 
 app.listen(process.env.PORT || port, () => console.log(`Server listening on ${process.env.PORT}!`));

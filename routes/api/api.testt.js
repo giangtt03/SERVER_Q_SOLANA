@@ -6,6 +6,6 @@ router.get('/testsByName', testController.getTests);
 
 router.post('/takeTest', testController.takeTest);
 
-router.get('/mostTakenTests', testController.getMostTakenTests);
+// router.get('/mostTakenTests', testController.getMostTakenTests);
 
 module.exports = router;
