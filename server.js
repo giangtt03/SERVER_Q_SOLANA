@@ -57,6 +57,8 @@ const testRouter = require('./routes/test');
 
 //api o fday
 const apiAuthRouter = require('./routes/api/api.auth');
+const apiTestRouter = require('./routes/api/api.testt');
+const apiScoreRouter = require('./routes/api/api.score');
 
 app.use('/', authRouter);
 app.use('/category', categoryRouter);
@@ -65,5 +67,8 @@ app.use('/test', testRouter);
 
 //api o fday
 app.use('/api', apiAuthRouter);
+app.use('/api', apiTestRouter);
+app.use('/api/score', apiScoreRouter);
+
 
 app.listen(process.env.PORT || port, () => console.log(`Server listening on ${process.env.PORT}!`));

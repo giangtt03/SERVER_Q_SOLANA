@@ -1,4 +1,4 @@
-const TKNguoiDung = require('../../models/api/api.user');
+const TKNguoiDung = require('../../models/api/User');
 const CryptoJs = require('crypto-js');
 const jwt = require('jsonwebtoken');
 
