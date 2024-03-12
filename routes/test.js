@@ -16,6 +16,7 @@ router.get('/:id', testController.getTestById);
 
 router.get('/', testController.getAllTests);
 
+router.get('/update/:id', testController.renderUpdateTest);
 router.put('/update/:id', testController.updateTest);
 
 // router.delete('/:id', testController.deleteTest);

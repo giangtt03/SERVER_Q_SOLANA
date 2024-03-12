@@ -78,26 +78,42 @@ module.exports = {
             res.status(500).json({ message: error.message });
         }
     },
-    
-    
 
+    renderUpdateTest: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const test = await Test.findById(id);
+            const questions = await Question.find();
+            const categories = await Category.find();
+            const user = req.session.user;
+            res.render('test/updateTest', { test, questions, categories, user });
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    },
     updateTest: async (req, res) => {
         try {
             const { id } = req.params;
             const { name, category, questions } = req.body;
+            const selectedQuestions = questions.map(questionId => new mongoose.Types.ObjectId(questionId));
+    
             const updatedTest = await Test.findByIdAndUpdate(
                 id,
-                { name, category, questions },
+                { name, category, questions: selectedQuestions },
                 { new: true }
             ).populate('questions');
+    
             if (!updatedTest) {
                 return res.status(404).json({ message: 'Test not found' });
             }
+    
             res.json(updatedTest);
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
     },
+    
+    
 
     // deleteTest: async (req, res) => {
     //     try {

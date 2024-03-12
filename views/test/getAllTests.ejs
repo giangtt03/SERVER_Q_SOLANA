@@ -104,7 +104,8 @@
         <p id="totalTests">Tổng số bài thi: <%= totalTests %></p>
         <% } %>
 
-        <!-- Displaying test names and categories -->
+        <a href="http://localhost:6002/test/create">Thêm bài thi mới</a>
+
         <% tests.forEach(test => { %>
             <div>
                 <h2><%= test.name %></h2>
@@ -118,9 +119,9 @@
                                     <li>
                                         <%= answer.answer %> -
                                         <% if (answer.correct === 'true') { %>
-                                            <span style="color: green;">Correct</span>
+                                            <span style="color: green;">True</span>
                                         <% } else { %>
-                                            <span style="color: red;">Incorrect</span>
+                                            <span style="color: red;">False</span>
                                         <% } %>
                                     </li>
                                 <% }); %>
@@ -130,6 +131,7 @@
                 <% } else { %>
                     <p>No questions found for this test</p>
                 <% } %>
+                <a href="http://localhost:6002/test/update/<%= test._id %>">Cập nhật</a>
             </div>
         <% }); %>
         

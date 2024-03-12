@@ -4,18 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Test</title>
+    <title>Update Test</title>
 </head>
 
 <body>
-    <h1>Create Test</h1>
-    <form id="createTestForm" action="/test/create" method="POST">
+    <h1>Update Test</h1>
+    <form id="updateTestForm" action="/test/update/<%= test._id %>" method="POST">
         <label for="name">Test Name:</label>
-        <input type="text" id="name" name="name" required>
+        <input type="text" id="name" name="name" value="<%= test.name %>" required>
         <label for="category">Category:</label>
         <select id="categorySelect" name="category" onchange="getQuestionsBySelectedCategory()">
             <% categories.forEach(category=> { %>
-                <option value="<%= category._id %>">
+                <option value="<%= category._id %>" <%= test.category.toString() === category._id.toString() ? 'selected' : '' %>>
                     <%= category.name %>
                 </option>
             <% }); %>
@@ -24,13 +24,13 @@
         <div id="questionList"></div>
         <label for="questions">Questions:</label>
         <% questions.forEach(question=> { %>
-            <input type="checkbox" id="<%= question._id %>" name="questions" value="<%= question.content %>">
+            <input type="checkbox" id="<%= question._id %>" name="questions" value="<%= question._id %>" <% if (test.questions.map(q => q.toString()).includes(question._id.toString())) { %> checked <% } %>>
             <label for="<%= question._id %>">
                 <%= question.content %>
             </label><br>
         <% }); %>
         <!-- End loop -->
-        <button type="submit">Create</button>
+        <button type="submit">Update</button>
     </form>
 
     <script>
@@ -52,12 +52,12 @@
             });
         }
 
-        document.getElementById("createTestForm").addEventListener("submit", function (event) {
+        document.getElementById("updateTestForm").addEventListener("submit", function (event) {
             event.preventDefault();
-            createTest();
+            updateTest();
         });
 
-        async function createTest() {
+        async function updateTest() {
             const testName = document.getElementById('name').value;
             const category = document.getElementById('categorySelect').value;
             const selectedQuestions = [];
@@ -65,8 +65,8 @@
                 selectedQuestions.push(question.value);
             });
 
-            fetch('/test/create', {
-                    method: 'POST',
+            fetch('/test/update/<%= test._id %>', {
+                    method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                     },
@@ -79,10 +79,10 @@
                 .then(response => response.json())
                 .then(data => {
                     console.log(data);
-                    // window.location.href = '/test';
+                    window.location.href = '/test';
                 })
                 .catch(error => {
-                    console.error('Error creating test:', error);
+                    console.error('Error updating test:', error);
                 });
         }
     </script>

@@ -72,6 +72,9 @@
 
 <body>
     <div class="sidebar">
+        <!-- <a href="#" id="menuToggle" class="sidebar-nav-link">
+            <i id="menuIcon" class="fas fa-bars"></i>
+        </a> -->
         <div class="sidebar-nav-link active">
             <div style="width: 100px; height: 100px; overflow: hidden; border-radius: 50%; margin-bottom: 10px;">
                 <img src="<%= user.avatar %>" alt="User Avatar" style="width: 100%; height: auto;">
@@ -87,13 +90,14 @@
         <a href="#" class="sidebar-nav-link">Quản lý </a>
         <a href="#" class="sidebar-nav-link">Quản lý</a>
         <a href="#" class="sidebar-nav-link">Quản lý</a>
+
     </div>
     <h1 class="text-center mt-5">All Categories</h1>
 
     <div class="container mt-5">
 
-        <div class="d-flex justify-content-between align-items-center mb-3">        
-            <a href="/category/create" >Thêm danh mục</a>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <a href="/category/create">Thêm danh mục</a>
         </div>
 
         <div class="mb-3">
@@ -174,6 +178,27 @@
                 }
             }
         }
+
+    //     document.addEventListener("DOMContentLoaded", function() {
+    //     var menuToggle = document.getElementById('menuToggle');
+    //     var sidebar = document.querySelector('.sidebar');
+    //     var menuIcon = document.getElementById('menuIcon');
+
+    //     var isMenuVisible = true;
+
+
+    //     menuToggle.addEventListener('click', function() {
+    //         if (isMenuVisible) {
+    //             sidebar.style.width = '0';
+    //             menuIcon.className = 'fas fa-bars';
+    //             isMenuVisible = false;
+    //         } else {
+    //             sidebar.style.width = '250px';
+    //             menuIcon.className = 'fas fa-times';
+    //             isMenuVisible = true;
+    //         }
+    //     });
+    // });
     </script>
 </body>
 
