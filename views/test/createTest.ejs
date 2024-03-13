@@ -12,6 +12,8 @@
     <form id="createTestForm" action="/test/create" method="POST">
         <label for="name">Test Name:</label>
         <input type="text" id="name" name="name" required>
+        <label for="image">Test Image:</label>
+        <input type="text" id="image" name="image" required> 
         <label for="category">Category:</label>
         <select id="categorySelect" name="category" onchange="getQuestionsBySelectedCategory()">
             <% categories.forEach(category=> { %>
@@ -59,6 +61,7 @@
 
         async function createTest() {
             const testName = document.getElementById('name').value;
+            const testImage = document.getElementById('image').value; 
             const category = document.getElementById('categorySelect').value;
             const selectedQuestions = [];
             document.querySelectorAll('input[name="questions"]:checked').forEach(question => {
@@ -72,6 +75,7 @@
                     },
                     body: JSON.stringify({
                         name: testName,
+                        image: testImage, 
                         category: category,
                         questions: selectedQuestions,
                     }),

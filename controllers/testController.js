@@ -26,10 +26,9 @@ module.exports = {
 
     createTest: async (req, res) => {
         try {
-            const { name, category, questions } = req.body;
+            const { name, image, category, questions } = req.body; 
             console.log("question: ", questions);
-    
-            // Lặp qua mảng các câu hỏi và truy vấn từng câu hỏi để lấy ObjectId
+
             const selectedQuestions = [];
             for (const question of questions) {
                 const foundQuestion = await Question.findOne({ content: question });
@@ -37,9 +36,10 @@ module.exports = {
                     selectedQuestions.push(foundQuestion._id);
                 }
             }
-    
+
             const newTest = new Test({
                 name,
+                image,
                 category,
                 questions: selectedQuestions,
             });
@@ -49,7 +49,7 @@ module.exports = {
             res.status(500).json({ message: error.message });
         }
     },
-     
+
     getTestById: async (req, res) => {
         try {
             const { id } = req.params;
@@ -68,7 +68,7 @@ module.exports = {
             const tests = await Test.find().populate({
                 path: 'questions',
                 populate: {
-                    path: 'answers' 
+                    path: 'answers'
                 }
             }).populate('category');
             const totalTests = tests.length;
@@ -94,34 +94,22 @@ module.exports = {
     updateTest: async (req, res) => {
         try {
             const { id } = req.params;
-            const { name, category, questions } = req.body;
+            const { name, image, category, questions } = req.body;
             const selectedQuestions = questions.map(questionId => new mongoose.Types.ObjectId(questionId));
-    
+
             const updatedTest = await Test.findByIdAndUpdate(
                 id,
-                { name, category, questions: selectedQuestions },
+                { name, image, category, questions: selectedQuestions },
                 { new: true }
             ).populate('questions');
-    
+
             if (!updatedTest) {
                 return res.status(404).json({ message: 'Test not found' });
             }
-    
+
             res.json(updatedTest);
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
     },
-    
-    
-
-    // deleteTest: async (req, res) => {
-    //     try {
-    //         const { id } = req.params;
-    //         await Test.findByIdAndDelete(id);
-    //         res.json({ message: 'Test deleted successfully' });
-    //     } catch (error) {
-    //         res.status(500).json({ message: error.message });
-    //     }
-    // }
 };

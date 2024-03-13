@@ -5,6 +5,10 @@ const TestSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  image:{
+    type: String,
+    require: true,
+  },
   category: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category',
