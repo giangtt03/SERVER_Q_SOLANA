@@ -15,15 +15,27 @@ module.exports = {
         }
     },
     
+    getTestById: async (req, res) => {
+        try {
+            const { testId } = req.params;
+
+            const test = await Test.findById(testId);
+            
+            if (!test) {
+                return res.status(404).json({ error: 'Test not found' });
+            }
+            
+            res.json(test);
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    },
+    
     takeTest: async (req, res) => {
         try {
             const { testId, userId, answers } = req.body;
 
-            // console.log("Data received from client:", req.body);
-
             const test = await Test.findById(testId).populate('questions');
-
-            // console.log("Test details:", test);
 
             if (!test) {
                 return res.status(404).json({ error: 'Test not found' });
@@ -39,25 +51,22 @@ module.exports = {
 
             for (let index = 0; index < answers.length; index++) {
                 const userAnswer = answers[index];
-
-                // console.log("User answer:", userAnswer);
-
                 const question = test.questions[index];
-
-                console.log("Question details:", question);
-
                 const correctAnswer = question.answers.find(answer => answer.answer === userAnswer && answer.correct.toLowerCase() === 'true');
-
-                // console.log("Correct answer:", correctAnswer);
 
                 if (typeof correctAnswer !== 'undefined') {
                     correctCount++;
                     score += 10;
+                    test.questions[index].isCorrect = true; // Mark question as correct
                 } else {
                     incorrectCount++;
                     score -= 5;
+                    test.questions[index].isCorrect = false; // Mark question as incorrect
                 }
             }
+
+            // Save the updated test with correct/incorrect marks
+            await test.save();
 
             const session = await Session.create({
                 userId: userId,
@@ -70,8 +79,6 @@ module.exports = {
                 correctAnswersCount: correctCount,
                 incorrectAnswersCount: incorrectCount,
             });
-
-            // console.log("Session details:", session);
 
             const updatedUser = await User.findByIdAndUpdate(userId, { $inc: { score: score } }, { new: true });
 
@@ -87,8 +94,7 @@ module.exports = {
 
             await userScore.save();
 
-            // console.log("Total score:", userScore.totalScore);
-
+            // Send the response back to the client
             res.status(200).json({ message: 'Test completed', user: updatedUser, session });
         } catch (error) {
             console.error("Error:", error);
