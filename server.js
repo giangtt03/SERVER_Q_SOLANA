@@ -9,6 +9,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const favicon = require('express-favicon');
 const methodOverride = require('method-override');
+const cron = require('node-cron');
 
 const app = express();
 const port = 3000;
@@ -61,6 +62,7 @@ const testRouter = require('./routes/test');
 const apiAuthRouter = require('./routes/api/api.auth');
 const apiTestRouter = require('./routes/api/api.testt');
 const apiScoreRouter = require('./routes/api/api.score');
+const apiRankRouter = require('./routes/api/api.rank');
 
 app.use('/', authRouter);
 app.use('/category', categoryRouter);
@@ -71,5 +73,6 @@ app.use('/test', testRouter);
 app.use('/api', apiAuthRouter);
 app.use('/api/quizz', apiTestRouter);
 app.use('/api/score', apiScoreRouter);
+app.use('/api/rank', apiRankRouter);
 
 app.listen(process.env.PORT || port, () => console.log(`Server listening on ${process.env.PORT}!`));
