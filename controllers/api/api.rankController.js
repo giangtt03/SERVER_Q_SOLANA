@@ -43,18 +43,23 @@ const updateWeeklyRankings = async () => {
     }
 };
 
-// Function to get weekly rankings
 const getWeeklyRankings = async (req, res) => {
     try {
         const rankings = await WeeklyRanking.find();
+
+        rankings.sort((a, b) => b.scoreWithinSevenDays - a.scoreWithinSevenDays);
         
+        rankings.forEach((ranking, index) => {
+            ranking.rank = index + 1;
+        });
+
         const userIds = rankings.map(ranking => ranking.userId);
         const users = await TKNguoiDung.find({ _id: { $in: userIds } });
 
         const updatedRankings = rankings.map(ranking => {
             const user = users.find(user => user._id.equals(ranking.userId));
             return {
-                ...ranking.toObject(), // Convert Mongoose document to plain JavaScript object
+                ...ranking.toObject(), 
                 user: user ? { avatar: user.avatar, name: user.username } : null
             };
         });
@@ -66,9 +71,30 @@ const getWeeklyRankings = async (req, res) => {
     }
 };
 
+
+const updateRankingOnTestCompletion = async (userId, score) => {
+    try {
+        let weeklyRanking = await WeeklyRanking.findOne({ userId });
+
+        if (!weeklyRanking) {
+            weeklyRanking = new WeeklyRanking({ userId, scoreWithinSevenDays: score });
+            await weeklyRanking.save();
+            console.log(`New weekly ranking added for user ${userId} with score ${score}`);
+        } else {
+            weeklyRanking.scoreWithinSevenDays += score;
+            await weeklyRanking.save();
+            console.log(`Updating weekly ranking for user ${userId} with score ${score}`);
+        }
+    } catch (error) {
+        console.error("Error updating ranking:", error);
+        throw error;
+    }
+};
+
 module.exports = {
     updateWeeklyRankings,
     getWeeklyRankings,
+    updateRankingOnTestCompletion, 
     scheduleWeeklyRankingUpdate: () => {
         cron.schedule('0 0 * * *', () => {
             console.log('Running updateWeeklyRankings...');
