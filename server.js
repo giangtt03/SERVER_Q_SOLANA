@@ -26,6 +26,9 @@ app.use(session({
 
 app.use(favicon(__dirname + '/public/faviacon.ico'));
 
+app.use(express.static(path.join(__dirname, 'public')));
+
+
 mongoose.connect(process.env.MONGO_URL).then(()=>{
     console.log('Db connected')
 }).catch((err)=> console.log(err));

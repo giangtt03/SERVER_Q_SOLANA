@@ -14,23 +14,32 @@ module.exports = {
             res.status(500).json({ message: error.message });
         }
     },
-    
+
     getTestById: async (req, res) => {
         try {
             const { testId } = req.params;
 
-            const test = await Test.findById(testId);
-            
+            // Tìm bài kiểm tra theo ID và populate danh sách câu hỏi
+            const test = await Test.findById(testId).populate({
+                path: 'questions',
+                populate: {
+                    path: 'answers' // Populate danh sách câu trả lời
+                }
+            });
+
+            console.log("Test detail:", test);
+
             if (!test) {
                 return res.status(404).json({ error: 'Test not found' });
             }
-            
+
             res.json(test);
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
     },
-    
+
+
     takeTest: async (req, res) => {
         try {
             const { testId, userId, answers } = req.body;
@@ -57,24 +66,31 @@ module.exports = {
                 if (typeof correctAnswer !== 'undefined') {
                     correctCount++;
                     score += 10;
-                    test.questions[index].isCorrect = true; // Mark question as correct
+                    test.questions[index].isCorrect = true;
                 } else {
                     incorrectCount++;
                     score -= 5;
-                    test.questions[index].isCorrect = false; // Mark question as incorrect
+                    test.questions[index].isCorrect = false;
                 }
             }
 
-            // Save the updated test with correct/incorrect marks
+            // Kiểm tra từng câu hỏi để xác định câu trả lời đúng/sai
+            const sessionAnswers = answers.map((answer, index) => {
+                const question = test.questions[index];
+                const correctAnswer = question.answers.find(ans => ans.correct.toLowerCase() === 'true');
+                return {
+                    questionId: question._id,
+                    selectedAnswerIndex: index,
+                    isCorrect: correctAnswer.answer === answers[index] // So sánh câu trả lời chọn với câu trả lời đúng
+                };
+            });
+
             await test.save();
 
             const session = await Session.create({
                 userId: userId,
                 testId: testId,
-                answers: answers.map((answer, index) => ({
-                    questionId: test.questions[index]._id,
-                    selectedAnswerIndex: index,
-                })),
+                answers: sessionAnswers,
                 score: score,
                 correctAnswersCount: correctCount,
                 incorrectAnswersCount: incorrectCount,
@@ -89,20 +105,18 @@ module.exports = {
                     totalScore: 0
                 });
             }
-            
+
             userScore.totalScore += score;
 
             await userScore.save();
 
-            // Send the response back to the client
             res.status(200).json({ message: 'Test completed', user: updatedUser, session });
         } catch (error) {
             console.error("Error:", error);
             res.status(500).json({ message: error.message });
         }
-    }
+    },
 
-    // Hiển thị bài quizz được làm nhiều nhất
     // getMostTakenTests: async (req, res) => {
     //     try {
     //         const tests = await Test.aggregate([
@@ -131,5 +145,36 @@ module.exports = {
     //         res.status(500).json({ message: error.message });
     //     }
     // }, 
-    
+
+    getSessionsByUserId: async (req, res) => {
+        try {
+            const { userId } = req.params;
+            console.log("UserID:", userId);
+
+            const sessions = await Session.find({ userId })
+                .sort({ createdAt: -1 })
+                .limit(10)
+                .populate({
+                    path: 'testId',
+                    select: 'name image questions',
+                    populate: {
+                        path: 'questions',
+                        populate: {
+                            path: 'answers'
+                        }
+                    }
+                })
+            console.log("Sessions found:", sessions);
+
+            if (!sessions) {
+                console.log("Sessions not found for user:", userId);
+                return res.status(404).json({ error: 'Sessions not found for this user' });
+            }
+
+            res.json(sessions);
+        } catch (error) {
+            console.error("Error fetching sessions:", error);
+            res.status(500).json({ message: error.message });
+        }
+    }
 };

@@ -7,7 +7,7 @@ router.get('/:userId', async (req, res) => {
     try {
         const userId = req.params.userId;
         const totalScore = await userScoreController.getUserTotalScore(userId);
-        console.log("totalScore: ", totalScore);
+        // console.log("totalScore: ", totalScore);
         
         res.json({ userId: userId, totalScore: totalScore });
     } catch (error) {
