@@ -1,107 +1,81 @@
 const WeeklyRanking = require('../../models/api/WeeklyRanking');
+const TKNguoiDung = require('../../models/api/User');
 const Session = require('../../models/api/Session');
 const cron = require('node-cron');
 
-module.exports = {
-    updateWeeklyRankings: async () => {
-        try {
-            const sevenDaysAgo = new Date();
-            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+// Function to update weekly rankings
+const updateWeeklyRankings = async () => {
+    try {
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-            const weeklyRankings = await Session.aggregate([
-                {
-                    $match: {
-                        createdAt: { $gte: sevenDaysAgo }
-                    }
-                },
-                {
-                    $group: {
-                        _id: "$userId",
-                        scoreWithinSevenDays: { $sum: "$score" }
-                    }
+        const weeklyRankings = await Session.aggregate([
+            {
+                $match: {
+                    createdAt: { $gte: sevenDaysAgo }
                 }
-            ]);
-
-            console.log("Weekly rankings:", weeklyRankings);
-
-            for (const ranking of weeklyRankings) {
-                console.log("Updating ranking for user:", ranking._id);
-                await WeeklyRanking.findOneAndUpdate(
-                    { userId: ranking._id },
-                    {
-                        scoreWithinSevenDays: ranking.scoreWithinSevenDays,
-                    },
-                    { upsert: true }
-                );
-
-
-                await module.exports.updateRankingOnTestCompletion(ranking._id, ranking.scoreWithinSevenDays);
+            },
+            {
+                $group: {
+                    _id: "$userId",
+                    scoreWithinSevenDays: { $sum: "$score" }
+                }
             }
+        ]);
 
-            console.log('Weekly rankings updated successfully');
-        } catch (error) {
-            console.error("Error updating weekly rankings:", error);
-        }
-    },
+        console.log("Weekly rankings:", weeklyRankings);
 
-    getWeeklyRankings: async (req, res) => {
-        try {
-            const rankings = await WeeklyRanking.find().populate('userId');
-
-            res.json(rankings);
-        } catch (error) {
-            console.error("Error fetching weekly rankings:", error);
-            res.status(500).json({ message: error.message });
-        }
-    },
-
-    updateRankingOnTestCompletion: async (userId, score) => {
-        try {
-            console.log("UserId in updateRankingOnTestCompletion:", userId);
-
-            if (!userId) {
-                console.error("Error: userId is null or undefined");
-                return;
-            }
-
-            let weeklyRanking = await WeeklyRanking.findOne({ userId: userId });
-
-            if (!weeklyRanking) {
-                weeklyRanking = await WeeklyRanking.create({
-                    userId: userId,
-                    scoreWithinSevenDays: 0
-
-                });
-            }
-
-            const updatedRanking = await WeeklyRanking.findOneAndUpdate(
-                { userId: userId },
-                { $inc: { scoreWithinSevenDays: score } },
-                { new: true }
+        for (const ranking of weeklyRankings) {
+            console.log("Updating ranking for user:", ranking._id);
+            await WeeklyRanking.findOneAndUpdate(
+                { userId: ranking._id },
+                {
+                    scoreWithinSevenDays: ranking.scoreWithinSevenDays,
+                },
+                { upsert: true }
             );
 
-            console.log(`Updated ranking for user ${userId} with score ${score}`);
-
-            if (updatedRanking) {
-                console.log("Updated ranking saved successfully");
-            } else {
-                console.error(`User ${userId} not found in weekly rankings`);
-            }
-        } catch (error) {
-            console.error("Error updating weekly rankings on test completion:", error);
         }
-    },
 
+        console.log('Weekly rankings updated successfully');
+    } catch (error) {
+        console.error("Error updating weekly rankings:", error);
+    }
+};
 
+// Function to get weekly rankings
+const getWeeklyRankings = async (req, res) => {
+    try {
+        const rankings = await WeeklyRanking.find();
+        
+        const userIds = rankings.map(ranking => ranking.userId);
+        const users = await TKNguoiDung.find({ _id: { $in: userIds } });
+
+        const updatedRankings = rankings.map(ranking => {
+            const user = users.find(user => user._id.equals(ranking.userId));
+            return {
+                ...ranking.toObject(), // Convert Mongoose document to plain JavaScript object
+                user: user ? { avatar: user.avatar, name: user.username } : null
+            };
+        });
+
+        res.json(updatedRankings);
+    } catch (error) {
+        console.error("Error fetching weekly rankings:", error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = {
+    updateWeeklyRankings,
+    getWeeklyRankings,
     scheduleWeeklyRankingUpdate: () => {
         cron.schedule('0 0 * * *', () => {
             console.log('Running updateWeeklyRankings...');
-            module.exports.updateWeeklyRankings();
+            updateWeeklyRankings();
         }, {
             scheduled: true,
             timezone: 'Asia/Ho_Chi_Minh'
         });
     }
 };
-
-module.exports.scheduleWeeklyRankingUpdate();

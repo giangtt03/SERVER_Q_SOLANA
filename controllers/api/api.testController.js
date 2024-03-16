@@ -96,14 +96,14 @@ module.exports = {
     
             await test.save();
     
-            // console.log("Data for Session.create:", {
-            //     userId: userId,
-            //     testId: testId,
-            //     answers: sessionAnswers,
-            //     score: score,
-            //     correctAnswersCount: correctCount,
-            //     incorrectAnswersCount: incorrectCount,
-            // });
+            console.log("Data for Session.create:", {
+                userId: userId,
+                testId: testId,
+                answers: sessionAnswers,
+                score: score,
+                correctAnswersCount: correctCount,
+                incorrectAnswersCount: incorrectCount,
+            });
     
             const session = await Session.create({
                 userId: userId,
@@ -114,10 +114,8 @@ module.exports = {
                 incorrectAnswersCount: incorrectCount,
             });
     
-            // console.log("Session created:", session);
     
             const updatedUser = await User.findByIdAndUpdate(userId, { $inc: { score: score } }, { new: true });
-            // console.log("Updated user:", updatedUser);
     
             let userScore = await UserScore.findOne({ userId: userId });
             if (!userScore) {
