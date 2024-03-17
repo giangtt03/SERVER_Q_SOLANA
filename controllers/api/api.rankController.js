@@ -60,8 +60,7 @@ const getWeeklyRankings = async (req, res) => {
             const user = users.find(user => user._id.equals(ranking.userId));
             return {
                 ...ranking.toObject(), 
-                user: user ? { avatar: user.avatar, name: user.username } : null
-            };
+                user: user ? { avatar: user.avatar, name: user.username, _id: user._id } : null            };
         });
 
         res.json(updatedRankings);
