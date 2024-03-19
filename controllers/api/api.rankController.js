@@ -3,7 +3,6 @@ const TKNguoiDung = require('../../models/api/User');
 const Session = require('../../models/api/Session');
 const cron = require('node-cron');
 
-// Function to update weekly rankings
 const updateWeeklyRankings = async () => {
     try {
         const sevenDaysAgo = new Date();
@@ -25,16 +24,26 @@ const updateWeeklyRankings = async () => {
 
         console.log("Weekly rankings:", weeklyRankings);
 
-        for (const ranking of weeklyRankings) {
-            console.log("Updating ranking for user:", ranking._id);
+        weeklyRankings.sort((a, b) => b.scoreWithinSevenDays - a.scoreWithinSevenDays);
+
+        for (let i = 0; i < weeklyRankings.length; i++) {
+            const ranking = weeklyRankings[i];
+
             await WeeklyRanking.findOneAndUpdate(
                 { userId: ranking._id },
-                {
-                    scoreWithinSevenDays: ranking.scoreWithinSevenDays,
-                },
+                { scoreWithinSevenDays: ranking.scoreWithinSevenDays },
                 { upsert: true }
             );
 
+            if (i === 0) {
+                const topUserScore = await UserScore.findOne({ userId: ranking._id });
+
+                if (topUserScore) {
+                    topUserScore.totalScore += 200;
+                    await topUserScore.save();
+                    console.log(`Added 200 points to the total score of user ${ranking._id}`);
+                }
+            }
         }
 
         console.log('Weekly rankings updated successfully');

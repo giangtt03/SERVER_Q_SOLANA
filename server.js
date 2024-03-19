@@ -63,6 +63,7 @@ const apiAuthRouter = require('./routes/api/api.auth');
 const apiTestRouter = require('./routes/api/api.testt');
 const apiScoreRouter = require('./routes/api/api.score');
 const apiRankRouter = require('./routes/api/api.rank');
+const apiCapchaRouter = require('./routes/api/api.capcha');
 
 app.use('/', authRouter);
 app.use('/category', categoryRouter);
@@ -74,5 +75,6 @@ app.use('/api', apiAuthRouter);
 app.use('/api/quizz', apiTestRouter);
 app.use('/api/score', apiScoreRouter);
 app.use('/api/rank', apiRankRouter);
+app.use('/api/capcha', apiCapchaRouter);
 
 app.listen(process.env.PORT || port, () => console.log(`Server listening on ${process.env.PORT}!`));

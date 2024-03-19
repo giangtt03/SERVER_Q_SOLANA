@@ -6,4 +6,6 @@ router.post('/create-user', api.createTK);
 
 router.post('/login', api.loginTK);
 
+router.post('/change-password', api.changePassword);
+
 module.exports = router;
