@@ -8,4 +8,9 @@ router.post('/login', api.loginTK);
 
 router.post('/change-password', api.changePassword);
 
+router.post('/veryfy-password', api.verifyPassword);
+
+router.post('/change-email', api.changeEmail);
+
+
 module.exports = router;
