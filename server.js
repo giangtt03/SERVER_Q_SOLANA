@@ -25,7 +25,7 @@ app.use(session({
     saveUninitialized: true
 }));
 
-app.use(favicon(__dirname + '/public/faviacon.ico'));
+app.use(favicon(__dirname + '/public/favicon.ico'));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -64,6 +64,7 @@ const apiTestRouter = require('./routes/api/api.testt');
 const apiScoreRouter = require('./routes/api/api.score');
 const apiRankRouter = require('./routes/api/api.rank');
 const apiCapchaRouter = require('./routes/api/api.capcha');
+const apiHelpRouter = require('./routes/api/api.help');
 
 app.use('/', authRouter);
 app.use('/category', categoryRouter);
@@ -76,5 +77,6 @@ app.use('/api/quizz', apiTestRouter);
 app.use('/api/score', apiScoreRouter);
 app.use('/api/rank', apiRankRouter);
 app.use('/api/capcha', apiCapchaRouter);
+app.use('/api/help', apiHelpRouter);
 
 app.listen(process.env.PORT || port, () => console.log(`Server listening on ${process.env.PORT}!`));
