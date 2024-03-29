@@ -12,5 +12,6 @@ router.post('/veryfy-password', api.verifyPassword);
 
 router.post('/change-email', api.changeEmail);
 
+router.put('/update-solana-address', api.updateAddressUser);
 
 module.exports = router;

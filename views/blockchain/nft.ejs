@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create NFT</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+
+</head>
+
+<body>
+
+    <input type="file" id="fileInput" />
+
+    <button id="connectButton" class="btn btn-primary">Connect to Phantom</button>
+    <button onclick="mintNft()" id="createNFTButton" class="btn btn-success d-none">Create NFT</button>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        let connection;
+        let wallet;
+
+        async function connectToPhantom() {
+            try {
+                if (window.solana && window.solana.isPhantom) {
+                    await window.solana.connect();
+                    wallet = window.solana.publicKey.toBase58();
+                    document.getElementById('connectButton').classList.add('d-none');
+                    document.getElementById('createNFTButton').classList.remove('d-none');
+                    console.log('Connected to Phantom:', wallet.toString());
+                } else {
+                    console.error('Phantom wallet not found');
+                }
+            } catch (error) {
+                console.error('Failed to connect to Phantom:', error);
+            }
+        }
+
+        const PRIVATE_KEY = "O37RXk2u7RIYdj5E";
+        const KEY = "66fJJKcchTgKyZzHyk3BKD8WcnQ1xpbka4D59mFcJPvvsFEk7G9Rbi2fFhycF7g7HStwXx4GwZgodTErwqv7rm5p";
+        const toTransacton = (encodedTransaction) => solanaWeb3.Transaction.from(Uint8Array.from(atob(encodedTransaction), c => c.charCodeAt(0)));
+
+        const mintNft = async () => {
+            const fileInput = document.querySelector("#fileInput");
+
+            if (fileInput.files.length === 0) {
+                console.log("Please select a file to create NFT.");
+                return;
+            }
+
+            const myHeaders = new Headers();
+            myHeaders.append("x-api-key", PRIVATE_KEY);
+
+            const formdata = new FormData();
+            formdata.append("network", "devnet");
+            formdata.append("private_key", KEY);
+            formdata.append("name", "Vupi");
+            formdata.append("symbol", "SH");
+            formdata.append("description", "Vupixinhvler!");
+            formdata.append("attributes", '[{"trait_type":"dev power","value":"over 900"}]');
+            formdata.append("external_url", "https://shyft.to");
+            formdata.append("max_supply", "0");
+            formdata.append("royalty", "5");
+            formdata.append("file", fileInput.files[0], "index.png");
+            formdata.append("nft_receiver", wallet);
+            formdata.append('service_charge', '{ "receiver": "499qpPLdqgvVeGvvNjsWi27QHpC8GPkPfuL5Cn2DtZJe", "amount": 0.01}');
+
+            const requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: formdata,
+                redirect: 'follow'
+            };
+
+            try {
+                const response = await fetch("https://api.shyft.to/sol/v1/nft/create", requestOptions);
+                // const res = await response.json();
+                // console.log("Res:", res);
+
+                // let transaction = toTransacton(res.result.encoded_transaction);
+
+                // const signedTransaction = await window.solana.signTransaction(transaction);
+                // const connection = new solanaWeb3.Connection("https://api.devnet.solana.com");
+                // const signature = await connection.sendRawTransaction(signedTransaction.serialize());
+                console.log("Complete!")
+                
+            } catch (error) {
+                console.error('Error while minting NFT:', error);
+            }
+        };
+
+
+
+        document.getElementById('connectButton').addEventListener('click', connectToPhantom);
+    </script>
+</body>
+
+</html>

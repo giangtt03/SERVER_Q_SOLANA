@@ -115,9 +115,6 @@ module.exports = {
             res.status(500).json({ error: 'Lỗi máy chủ nội bộ' });
         }
     },
-    
-    
-    
     changeEmail: async (req, res) => {
         try {
             const { userId, newEmail } = req.body;
@@ -136,5 +133,27 @@ module.exports = {
             console.error(error);
             res.status(500).json({ error: 'Internal Server Error' });
         }
+    },
+    updateAddressUser: async (req, res) => {
+        try {
+        const { solanaAddress, userId } = req.body;
+        if (!(userId)) {
+        return res.status(400).json({ message: 'Invalid user ID' });
+        }
+        console.log("log dia chi",solanaAddress);
+
+        const user = await TKNguoiDung.findByIdAndUpdate(
+        userId,{ solanaAddress },{ new: true }
+        );
+        
+        if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.json(user);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server Error' });
     }
+  },
 };

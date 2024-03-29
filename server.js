@@ -16,7 +16,6 @@ const port = 3000;
 
 app.use(cors());
 
-
 dotenv.config();
 
 app.use(session({
@@ -53,10 +52,15 @@ app.set('view engine', 'ejs');
 
 // console.log("Views directory:", app.get('views'));
 
+app.get('/nft', (req, res) => {
+    res.render('blockchain/nft');
+});
+
 const authRouter = require('./routes/auth');
 const categoryRouter = require('./routes/category');
 const questionRouter = require('./routes/question');
 const testRouter = require('./routes/test');
+
 
 //api o fday
 const apiAuthRouter = require('./routes/api/api.auth');
