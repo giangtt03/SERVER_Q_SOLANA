@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get All NFTs</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .list-group-item {
+            padding-bottom: 1rem;
+        }
+
+        .list-group-item p {
+            margin-bottom: 0.5rem;
+        }
+
+        .list-group-item .stt {
+            font-weight: bold;
+        }
+
+        .centered {
+            text-align: center;
+            margin-top: 5rem;
+            margin-bottom: 4rem; 
+        }
+
+         /* Sidebar styles */
+
+         .sidebar {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #f8f9fa;
+            padding-top: 3rem;
+            overflow-y: auto;
+            z-index: 1;
+        }
+
+        .sidebar-nav-link {
+            padding: 10px;
+            color: #000;
+            text-decoration: none;
+            display: block;
+        }
+
+        .sidebar-nav-link:hover {
+            background-color: #e9ecef;
+        }
+
+        .sidebar-brand {
+            padding: 20px;
+            font-weight: bold;
+            color: #000;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body class="container">
+
+    <div class="sidebar">
+        <div class="sidebar-nav-link active">
+            <div style="width: 100px; height: 100px; overflow: hidden; border-radius: 50%; margin-bottom: 10px;">
+                <img src="<%= user.avatar %>" alt="User Avatar" style="width: 100%; height: auto;">
+            </div>
+            <p style="margin-bottom: 1em;"><%= user.email %></p>
+        </div>
+
+        <a href="http://localhost:6002/question" class="sidebar-nav-link active">Quản lý câu hỏi</a>
+        <a href="http://localhost:6002/category" class="sidebar-nav-link">Danh sách thể loại</a>
+        <a href="http://localhost:6002/test" class="sidebar-nav-link">Quản lý quizz </a>
+        <a href="http://localhost:6002/nft" class="sidebar-nav-link">NFTs</a>
+        <a href="#" class="sidebar-nav-link">Quản lý</a>
+        <a href="#" class="sidebar-nav-link">Quản lý</a>
+    </div>
+
+    <h1 class="mt-5 mb-4 centered">All NFTs</h1>
+
+    <a href="http://localhost:6002/nft/mintNfts" >mintNfts</a>
+
+    <div id="nftList" class="mb-5"></div>
+
+    <script>
+        async function getAllNFTs() {
+            const myHeaders = new Headers();
+            myHeaders.append("x-api-key", "O37RXk2u7RIYdj5E");
+
+            const requestOptions = {
+                method: 'GET',
+                headers: myHeaders,
+                redirect: 'follow'
+            };
+
+            const apiUrl = "https://api.shyft.to/sol/v1/nft/read_all?network=devnet&address=DZkW5YeDqC1xCeYrHqTa7a34wVsntPqkXtNj9R14Jnre&update_authority=DZkW5YeDqC1xCeYrHqTa7a34wVsntPqkXtNj9R14Jnre";
+
+            try {
+                const response = await fetch(apiUrl, requestOptions);
+                const responseData = await response.json();
+
+                const nfts = responseData.result;
+                
+                displayNFTs(nfts);
+            } catch (error) {
+                console.error('Error fetching NFTs:', error);
+            }
+        }
+
+        function displayNFTs(nfts) {
+            const nftList = document.getElementById('nftList');
+            nftList.innerHTML = '';
+
+            if (!Array.isArray(nfts)) {
+                nftList.innerHTML = '<p class="text-danger">Error: Invalid data format.</p>';
+                return;
+            }
+
+            if (nfts.length === 0) {
+                nftList.innerHTML = '<p class="text-danger">No NFTs found.</p>';
+                return;
+            }
+
+            const ul = document.createElement('ul');
+            ul.classList.add('list-group');
+
+            nfts.forEach((nft, index) => {
+                const li = document.createElement('li');
+                li.classList.add('list-group-item');
+                li.innerHTML = `
+                    <p class="stt">STT: ${index + 1}</p>
+                    <p>Name: ${nft.name}</p>
+                    <p>Symbol: ${nft.symbol}</p>
+                    <p>Royalty: ${nft.royalty}</p>
+                    <img src="${nft.image_uri}" alt="NFT Image" style="max-width: 200px;"/>
+                    <p>Description: ${nft.description}</p>
+                    <p>Owner: ${nft.owner}</p>
+                    <p>External URL: <a href="${nft.external_url}" target="_blank">${nft.external_url}</a></p>
+                `;
+                ul.appendChild(li);
+            });
+
+            nftList.appendChild(ul);
+        }
+
+
+        getAllNFTs();
+    </script>
+</body>
+
+</html>

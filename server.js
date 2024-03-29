@@ -52,15 +52,19 @@ app.set('view engine', 'ejs');
 
 // console.log("Views directory:", app.get('views'));
 
-app.get('/nft', (req, res) => {
-    res.render('blockchain/nft');
-});
+// app.get('/nft/mintNfts', (req, res) => {
+//     res.render('blockchain/nft');
+// });
+
+// app.get('/nft', (req, res) => {
+//     res.render('blockchain/getAllnfts');
+// });
 
 const authRouter = require('./routes/auth');
 const categoryRouter = require('./routes/category');
 const questionRouter = require('./routes/question');
 const testRouter = require('./routes/test');
-
+const nftRouter = require('./routes/nft');
 
 //api o fday
 const apiAuthRouter = require('./routes/api/api.auth');
@@ -74,6 +78,7 @@ app.use('/', authRouter);
 app.use('/category', categoryRouter);
 app.use('/question', questionRouter);
 app.use('/test', testRouter);
+app.use('/nft', nftRouter);
 
 //api o fday
 app.use('/api', apiAuthRouter);

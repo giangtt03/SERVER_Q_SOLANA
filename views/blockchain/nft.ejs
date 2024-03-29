@@ -9,9 +9,64 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
 
+    <style>
+         /* Sidebar styles */
+
+         .sidebar {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #f8f9fa;
+            padding-top: 3rem;
+            overflow-y: auto;
+            z-index: 1;
+        }
+
+        .sidebar-nav-link {
+            padding: 10px;
+            color: #000;
+            text-decoration: none;
+            display: block;
+        }
+
+        .sidebar-nav-link:hover {
+            background-color: #e9ecef;
+        }
+
+        .sidebar-brand {
+            padding: 20px;
+            font-weight: bold;
+            color: #000;
+            text-decoration: none;
+        }
+    </style>
+
 </head>
 
 <body>
+    <div class="sidebar">
+        <!-- <a href="#" id="menuToggle" class="sidebar-nav-link">
+            <i id="menuIcon" class="fas fa-bars"></i>
+        </a> -->
+        <div class="sidebar-nav-link active">
+            <div style="width: 100px; height: 100px; overflow: hidden; border-radius: 50%; margin-bottom: 10px;">
+                <img src="<%= user.avatar %>" alt="User Avatar" style="width: 100%; height: auto;">
+            </div>
+            <p style="margin-bottom: 1em;">
+                <%= user.email %>
+            </p>
+        </div>
+
+        <a href="http://localhost:6002/question" class="sidebar-nav-link active">Quản lý câu hỏi</a>
+        <a href="http://localhost:6002/category" class="sidebar-nav-link">Danh sách thể loại </a>
+        <a href="http://localhost:6002/test" class="sidebar-nav-link">Quản lý quizz </a>
+        <a href="http://localhost:6002/nft" class="sidebar-nav-link">NFTs</a>
+        <a href="#" class="sidebar-nav-link">Quản lý</a>
+        <a href="#" class="sidebar-nav-link">Quản lý</a>
+
+    </div>
 
     <input type="file" id="fileInput" />
 
@@ -42,8 +97,8 @@
         }
 
         const PRIVATE_KEY = "O37RXk2u7RIYdj5E";
-        const KEY = "66fJJKcchTgKyZzHyk3BKD8WcnQ1xpbka4D59mFcJPvvsFEk7G9Rbi2fFhycF7g7HStwXx4GwZgodTErwqv7rm5p";
-        const toTransacton = (encodedTransaction) => solanaWeb3.Transaction.from(Uint8Array.from(atob(encodedTransaction), c => c.charCodeAt(0)));
+        const toTransaction = (encodedTransaction) => solanaWeb3.Transaction.from(Uint8Array.from(atob(encodedTransaction), c => c.charCodeAt(0)));
+
 
         const mintNft = async () => {
             const fileInput = document.querySelector("#fileInput");
@@ -56,38 +111,38 @@
             const myHeaders = new Headers();
             myHeaders.append("x-api-key", PRIVATE_KEY);
 
-            const formdata = new FormData();
-            formdata.append("network", "devnet");
-            formdata.append("private_key", KEY);
-            formdata.append("name", "Vupi");
-            formdata.append("symbol", "SH");
-            formdata.append("description", "Vupixinhvler!");
-            formdata.append("attributes", '[{"trait_type":"dev power","value":"over 900"}]');
-            formdata.append("external_url", "https://shyft.to");
-            formdata.append("max_supply", "0");
-            formdata.append("royalty", "5");
-            formdata.append("file", fileInput.files[0], "index.png");
-            formdata.append("nft_receiver", wallet);
-            formdata.append('service_charge', '{ "receiver": "499qpPLdqgvVeGvvNjsWi27QHpC8GPkPfuL5Cn2DtZJe", "amount": 0.01}');
+            const formData = new FormData();
+            formData.append("network", "devnet");
+            formData.append("wallet", wallet);
+            formData.append("name", "giangtt");
+            formData.append("symbol", "SH");
+            formData.append("description", "Vupixinhvler!");
+            formData.append("attributes", '[{"trait_type":"dev power","value":"over 900"}]');
+            formData.append("external_url", "https://shyft.to");
+            formData.append("max_supply", "0");
+            formData.append("royalty", "5");
+            formData.append("file", fileInput.files[0], "index.png");
+            formData.append("nft_receiver", "5KW2twHzRsAaiLeEx4zYNV35CV2hRrZGw7NYbwMfL4a2");
+            formData.append('service_charge', '{ "receiver": "499qpPLdqgvVeGvvNjsWi27QHpC8GPkPfuL5Cn2DtZJe", "amount": 0.01}');
 
             const requestOptions = {
                 method: 'POST',
                 headers: myHeaders,
-                body: formdata,
+                body: formData,
                 redirect: 'follow'
             };
 
             try {
-                const response = await fetch("https://api.shyft.to/sol/v1/nft/create", requestOptions);
-                // const res = await response.json();
-                // console.log("Res:", res);
+                const response = await fetch("https://api.shyft.to/sol/v1/nft/create_detach", requestOptions);
+                const res = await response.json();
+                console.log("Res:", res);
 
-                // let transaction = toTransacton(res.result.encoded_transaction);
+                let transaction = toTransaction(res.result.encoded_transaction);
 
-                // const signedTransaction = await window.solana.signTransaction(transaction);
-                // const connection = new solanaWeb3.Connection("https://api.devnet.solana.com");
-                // const signature = await connection.sendRawTransaction(signedTransaction.serialize());
-                console.log("Complete!")
+                const signedTransaction = await window.phantom.solana.signTransaction(transaction);
+                const connection = new solanaWeb3.Connection("https://api.devnet.solana.com");
+                const signature = await connection.sendRawTransaction(signedTransaction.serialize());
+
                 
             } catch (error) {
                 console.error('Error while minting NFT:', error);
