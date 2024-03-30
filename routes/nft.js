@@ -8,6 +8,8 @@ router.use(sessionMiddleware);
 
 router.get('/', nft.getAllnfts);
 router.get('/mintNfts', nft.mintNfts);
+router.get('/tranfers', nft.exchangeNFT);
+
 
 
 module.exports = router;

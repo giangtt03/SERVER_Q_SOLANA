@@ -6,16 +6,14 @@ const jwt = require('jsonwebtoken');
 module.exports = {
     createTK: async (req, res) => {
         try {
-            const { username, email, password, avatar, solanaAddress } = req.body;
+            const { username, email, password } = req.body;
 
             const encryptedPassword = CryptoJs.AES.encrypt(password, process.env.SECRET).toString();
 
             const newUser = new TKNguoiDung({
                 username,
                 email,
-                password: encryptedPassword,
-                avatar,
-                solanaAddress,
+                password: encryptedPassword
             });
 
             const savedUser = await newUser.save();

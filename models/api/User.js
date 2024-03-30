@@ -19,7 +19,6 @@ const UserSchema = new mongoose.Schema({
   },
   solanaAddress: {
     type: String,
-    required: true,
     unique: true,
   },
 });
