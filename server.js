@@ -60,6 +60,7 @@ app.set('view engine', 'ejs');
 //     res.render('blockchain/getAllnfts');
 // });
 
+
 const authRouter = require('./routes/auth');
 const categoryRouter = require('./routes/category');
 const questionRouter = require('./routes/question');
@@ -73,6 +74,9 @@ const apiScoreRouter = require('./routes/api/api.score');
 const apiRankRouter = require('./routes/api/api.rank');
 const apiCapchaRouter = require('./routes/api/api.capcha');
 const apiHelpRouter = require('./routes/api/api.help');
+// const apiNftRouter = require('./routes/api/tranfer');
+const apiNotifnftRouter = require('./routes/api/api.notifnft');
+
 
 app.use('/', authRouter);
 app.use('/category', categoryRouter);
@@ -87,5 +91,9 @@ app.use('/api/score', apiScoreRouter);
 app.use('/api/rank', apiRankRouter);
 app.use('/api/capcha', apiCapchaRouter);
 app.use('/api/help', apiHelpRouter);
+// app.use('/api/nft', apiNftRouter);
+app.use('/api/notf', apiNotifnftRouter);
+
+
 
 app.listen(process.env.PORT || port, () => console.log(`Server listening on ${process.env.PORT}!`));

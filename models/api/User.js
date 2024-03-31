@@ -16,10 +16,12 @@ const UserSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
+    default: ''
   },
   solanaAddress: {
     type: String,
     unique: true,
+    default: ''
   },
 });
 

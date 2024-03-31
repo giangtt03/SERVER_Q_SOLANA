@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exchange Requests</title>
+</head>
+
+<body>
+    <h1>Exchange Requests</h1>
+    <ul>
+        <% exchangeRequests.forEach(request=> { %>
+            <li>
+                WalletId: <%= request.userId %><br>
+                NFT ID: <%= request.nftId %><br>
+                Request Time: <%= request.requestTime %><br>
+                <form id="confirmForm_<%= request._id %>" action="/confirmExchange" method="post">
+                    <input type="hidden" name="requestId" value="<%= request._id %>">
+                    <button type="button" onclick="confirmExchange('<%= request._id %>', '<%= request.nftId %>', '<%= request.userId %>')">Confirm Exchange</button>
+                </form>
+            </li>
+        <% }); %>
+    </ul>
+
+    <script>
+        function confirmExchange(requestId, nftId, userId) {
+            // Tạo yêu cầu API
+            var myHeaders = new Headers();
+            myHeaders.append("x-api-key", "O37RXk2u7RIYdj5E");
+            myHeaders.append("Content-Type", "application/json");
+
+            var raw = JSON.stringify({
+                "network": "devnet",
+                "token_address": nftId,
+                "from_address": "DZkW5YeDqC1xCeYrHqTa7a34wVsntPqkXtNj9R14Jnre",
+                "to_address": userId,
+                "amount": 1,
+                "fee_payer": "DZkW5YeDqC1xCeYrHqTa7a34wVsntPqkXtNj9R14Jnre",
+                "priority_fee": 100
+            });
+
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+
+            // Gọi API
+            fetch("https://api.shyft.to/sol/v1/nft/transfer_detach", requestOptions)
+                .then(response => response.text())
+                .then(result => {
+                    // Xử lý kết quả nếu cần
+                    console.log(result);
+                    alert('NFTs transferred successfully');
+                })
+                .catch(error => {
+                    // Xử lý lỗi nếu có
+                    console.error('error', error);
+                    alert('Error transferring NFTs');
+                });
+        }
+        
+    //     function saveNotification(requestId, nftId, walletId) {
+        //     var xhr = new XMLHttpRequest();
+        //     xhr.open("POST", "/exchangeNFT");
+        //     xhr.setRequestHeader("Content-Type", "application/json");
+        //     xhr.onreadystatechange = function () {
+        //         if (xhr.readyState === 4 && xhr.status === 200) {
+        //             console.log(xhr.responseText);
+        //         }
+        //     };
+        //     var data = JSON.stringify({
+        //         walletId: walletId,
+        //         nftId: nftId,
+        //         requestTime: new Date().toISOString(),
+        //         content: "Vupi xinh vler" 
+        //     });
+        //     xhr.send(data);
+        // }
+    </script>
+
+    
+
+</body>
+
+</html>
