@@ -13,7 +13,7 @@
         <% exchangeRequests.forEach(request=> { %>
             <li>
                 WalletId: <%= request.userId %><br>
-                NFT ID: <%= request.nftId %><br>
+                Token Adress: <%= request.nftId %><br>
                 Request Time: <%= request.requestTime %><br>
                 <form id="confirmForm_<%= request._id %>" action="/confirmExchange" method="post">
                     <input type="hidden" name="requestId" value="<%= request._id %>">
@@ -25,7 +25,6 @@
 
     <script>
         function confirmExchange(requestId, nftId, userId) {
-            // Tạo yêu cầu API
             var myHeaders = new Headers();
             myHeaders.append("x-api-key", "O37RXk2u7RIYdj5E");
             myHeaders.append("Content-Type", "application/json");
@@ -51,12 +50,10 @@
             fetch("https://api.shyft.to/sol/v1/nft/transfer_detach", requestOptions)
                 .then(response => response.text())
                 .then(result => {
-                    // Xử lý kết quả nếu cần
                     console.log(result);
                     alert('NFTs transferred successfully');
                 })
                 .catch(error => {
-                    // Xử lý lỗi nếu có
                     console.error('error', error);
                     alert('Error transferring NFTs');
                 });

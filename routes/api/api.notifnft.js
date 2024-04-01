@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const NotifTranfers = require('../../models/api/notifTranfer');
 const User = require('../../models/api/User');
+const UserScore = require('../../models/api/UserScore');
 
 router.post('/exchangeNFT', async (req, res) => {
     const { userId, nftId, requestTime } = req.body;
@@ -9,16 +10,35 @@ router.post('/exchangeNFT', async (req, res) => {
     try {
 
         const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'Người dùng không tồn tại' });
+        }
+
+        const uScore = await UserScore.findOne({ userId }); 
+        if (!uScore || uScore.totalScore < 200) {
+            return res.status(400).json({ success: false, message: 'Bạn không đủ điểm để đổi NFT' });
+        }
+
         const walletId = user.solanaAddress;
-        // Lưu thông tin yêu cầu vào cơ sở dữ liệu
         const notification = new NotifTranfers({
+            uId: userId,
             userId: walletId,
             nftId,
             requestTime
         });
         await notification.save();
 
-        // Trả về phản hồi thành công
+        // const existingRequest = await NotifTranfers.findOne({ uId: userId, nftId });
+        // if (existingRequest) {
+        //     return res.status(400).json({ success: false, message: 'Bạn đã gửi yêu cầu đổi NFT trước đó' });
+        // }
+
+        const userScore = await UserScore.findOne({ userId }); 
+        if (userScore) {
+            userScore.totalScore -= 200; 
+            await userScore.save();
+        }
+
         return res.status(200).json({ success: true, message: 'Yêu cầu đổi NFT đã được gửi thành công' });
     } catch (error) {
         console.error("Lỗi khi lưu yêu cầu đổi NFT:", error);
@@ -28,15 +48,12 @@ router.post('/exchangeNFT', async (req, res) => {
 
 router.get('/confirm', async (req, res) => {
     try {
-        // Lấy danh sách yêu cầu đổi từ cơ sở dữ liệu
-        const exchangeRequests = await NotifTranfers.find(); // Sử dụng hàm find để lấy danh sách yêu cầu đổi từ MongoDB
+        const exchangeRequests = await NotifTranfers.find(); 
 
 
-        // Render trang EJS và truyền mảng exchangeRequests vào
         res.render('c&n/exchangeRequests', { exchangeRequests });
     } catch (error) {
         console.error("Error fetching exchange requests:", error);
-        // Xử lý lỗi khi không thể lấy được danh sách yêu cầu đổi
         res.status(500).send("Error fetching exchange requests");
     }
 });
