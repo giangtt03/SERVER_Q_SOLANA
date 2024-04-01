@@ -72,6 +72,18 @@
         button {
             padding: 5px 10px;
         }
+
+        .transaction-link {
+            display: block;
+            padding: 10px;
+            color: #000;
+            text-decoration: none;
+            /* background-color: #e9ecef; */
+            /* margin-top: 10px; */
+            margin-right: 975px;
+            text-align: center;
+            border-radius: 5px;
+        }
     </style>
 </head>
 
@@ -96,6 +108,7 @@
     </div>
     <div class="content">
         <h1 style="display: flex; justify-content: center; align-items: center; margin-right: 122px;">Xác nhận yêu cầu đổi nfts</h1>
+        <a href="https://shyft-insider.vercel.app/" target="_blank" class="transaction-link">Chi tiết giao dịch</a>
         <table>
             <thead>
                 <tr>
@@ -130,6 +143,8 @@
     </div>
 
     <script>
+        const private_k = "3L38PQm9yYAKHkUfGYmuQpmhXaubu7jdfSbykKLvQWbZgJX862WFVs8mRoChb4EWbXdtqotwtpZ9Hw1Xh9RmfK1t";
+        console.log(private_k)
         function confirmExchange(requestId, nftId, userId) {
             var myHeaders = new Headers();
             myHeaders.append("x-api-key", "O37RXk2u7RIYdj5E");
