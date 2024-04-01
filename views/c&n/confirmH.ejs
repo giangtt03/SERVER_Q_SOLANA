@@ -4,14 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Category</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Confirmed Exchange Requests</title>
     <style>
         body {
             margin: 0;
             font-family: 'Arial';
         }
-
         /* Sidebar styles */
         .sidebar {
             height: 100%;
@@ -43,24 +41,33 @@
             text-decoration: none;
         }
 
-        /* Form styles 
-        label {
-            font-weight: bold;
+        /* Center content */
+        .content {
+            margin-left: 250px;
+            padding: 20px;
         }
 
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
+        h1 {
+            margin-left: 250px;
         }
 
-        button.btn-primary {
-            padding: 10px 20px;
-        }*/
+        /* Style for table */
+        table {
+            width: calc(100% - 250px); /* Subtracting sidebar width from 100% */
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
 
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
     </style>
 </head>
 
@@ -70,7 +77,9 @@
             <div style="width: 100px; height: 100px; overflow: hidden; border-radius: 50%; margin-bottom: 10px;">
                 <img src="<%= user.avatar %>" alt="User Avatar" style="width: 100%; height: auto;">
             </div>
-            <p style="margin-bottom: 1em;"><%= user.email %></p>
+            <p style="margin-bottom: 1em;">
+                <%= user.email %>
+            </p>
         </div>
 
         <a href="http://localhost:6002/question" class="sidebar-nav-link active">Quản lý câu hỏi</a>
@@ -79,41 +88,31 @@
         <a href="http://localhost:6002/nft" class="sidebar-nav-link">NFTs</a>
         <a href="http://localhost:6002/api/notf/confirm" class="sidebar-nav-link">Quản lý đổi thưởng</a>
         <a href="http://localhost:6002/api/notf/confirmH" class="sidebar-nav-link">Lịch sử xác nhận</a>
+
     </div>
-
-    <div class="container mt-5">
-        <h1 style="margin-left: 550px; margin-top: 20px;">Create Category</h1>
-
-        <form id="createCategoryForm">
-            <div class="mb-3">
-                <label for="name" class="form-label">Category Name:</label>
-                <input type="text" class="form-control" id="name" name="name" required>
-            </div>
-            <button type="button" class="btn btn-primary" onclick="createCategory()">Create</button>
-        </form>
+    <h1 style="align-items: center; display: flex; justify-content: center; margin-right: 112px;">Lịch sử xác nhận</h1>
+    <div class="content">
+        <table>
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>WalletId</th>
+                    <th>Token Address</th>
+                    <th>Request Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% confirmedRequests.forEach((request, index) => { %>
+                    <tr>
+                        <td><%= index + 1 %></td>
+                        <td><%= request.userId %></td>
+                        <td><%= request.nftId %></td>
+                        <td><%= request.requestTime %></td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function createCategory() {
-            const categoryName = document.getElementById('name').value;
-
-            fetch('/category/create', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ name: categoryName }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                window.location.href = '/category';
-            })
-            .catch(error => {
-                console.error('Error creating category:', error);
-            });
-        }
-    </script>
 </body>
 
 </html>

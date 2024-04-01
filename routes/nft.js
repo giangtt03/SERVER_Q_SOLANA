@@ -4,7 +4,7 @@ const nft = require('../controllers/nftController');
 const sessionMiddleware = require('../middleware/sessionMiddleware');
 
 // Middleware để kiểm tra session
-// router.use(sessionMiddleware);
+router.use(sessionMiddleware);
 
 router.get('/', nft.getAllnfts);
 router.get('/mintNfts', nft.mintNfts);

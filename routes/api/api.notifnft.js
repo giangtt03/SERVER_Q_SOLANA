@@ -33,11 +33,8 @@ router.post('/exchangeNFT', async (req, res) => {
         //     return res.status(400).json({ success: false, message: 'Bạn đã gửi yêu cầu đổi NFT trước đó' });
         // }
 
-        const userScore = await UserScore.findOne({ userId }); 
-        if (userScore) {
-            userScore.totalScore -= 200; 
-            await userScore.save();
-        }
+        uScore.totalScore -= 200; 
+        await uScore.save();
 
         return res.status(200).json({ success: true, message: 'Yêu cầu đổi NFT đã được gửi thành công' });
     } catch (error) {
@@ -48,13 +45,43 @@ router.post('/exchangeNFT', async (req, res) => {
 
 router.get('/confirm', async (req, res) => {
     try {
-        const exchangeRequests = await NotifTranfers.find(); 
+        const user = req.session.user;
+        const exchangeRequests = await NotifTranfers.find({ confirmed: false });
 
-
-        res.render('c&n/exchangeRequests', { exchangeRequests });
+        res.render('c&n/exchangeRequests', { exchangeRequests, user });
     } catch (error) {
         console.error("Error fetching exchange requests:", error);
         res.status(500).send("Error fetching exchange requests");
+    }
+});
+
+router.post('/confirmExchange', async (req, res) => {
+    const { requestId } = req.body;
+
+    try {
+        const notification = await NotifTranfers.findById(requestId);
+        if (!notification) {
+            return res.status(404).json({ success: false, message: 'Yêu cầu không tồn tại' });
+        }
+
+        notification.confirmed = true;
+        await notification.save();
+
+        return res.status(200).json({ success: true, message: 'Xác nhận thành công' });
+    } catch (error) {
+        console.error("Lỗi khi xác nhận yêu cầu đổi NFT:", error);
+        return res.status(500).json({ success: false, message: "Lỗi máy chủ nội bộ" });
+    }
+});
+
+router.get('/confirmH', async (req, res) => {
+    try {
+        const user = req.session.user;
+        const confirmedRequests = await NotifTranfers.find({ confirmed: true });
+        res.render('c&n/confirmH', { confirmedRequests, user });
+    } catch (error) {
+        console.error("Error fetching confirmed exchange requests:", error);
+        res.status(500).send("Error fetching confirmed exchange requests");
     }
 });
 

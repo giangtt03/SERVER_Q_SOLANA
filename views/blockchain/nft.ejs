@@ -5,14 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create NFT</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+        rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
 
     <style>
-         /* Sidebar styles */
+        /* Sidebar styles */
 
-         .sidebar {
+        .sidebar {
             height: 100%;
             width: 250px;
             position: fixed;
@@ -41,6 +42,43 @@
             color: #000;
             text-decoration: none;
         }
+
+        /* Center content */
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin-left: 250px; /* Adjust this value to match sidebar width */
+            padding: 20px;
+        }
+
+        /* Style for the container around inputs and button */
+        .input-container {
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column; /* Display inputs and button in a column */
+            align-items: stretch; /* Stretch inputs and button to fill container width */
+        }
+
+        /* Style for file input */
+        #fileInput {
+            margin-bottom: 10px; /* Add some spacing between file input and other inputs */
+        }
+
+        /* Style for text inputs */
+        input[type="text"] {
+            margin-bottom: 10px; /* Add some spacing between text inputs */
+        }
+
+        /* Style for buttons */
+        button {
+            padding: 10px 20px;
+        }
     </style>
 
 </head>
@@ -63,18 +101,24 @@
         <a href="http://localhost:6002/category" class="sidebar-nav-link">Danh sách thể loại </a>
         <a href="http://localhost:6002/test" class="sidebar-nav-link">Quản lý quizz </a>
         <a href="http://localhost:6002/nft" class="sidebar-nav-link">NFTs</a>
-        <a href="#" class="sidebar-nav-link">Quản lý</a>
-        <a href="#" class="sidebar-nav-link">Quản lý</a>
+        <a href="http://localhost:6002/api/notf/confirm" class="sidebar-nav-link">Quản lý đổi thưởng</a>
+        <a href="http://localhost:6002/api/notf/confirmH" class="sidebar-nav-link">Lịch sử xác nhận</a>
 
     </div>
 
-    <input type="file" id="fileInput" />
-
-    <button id="connectButton" class="btn btn-primary">Connect to Phantom</button>
-    <button onclick="mintNft()" id="createNFTButton" class="btn btn-success d-none">Create NFT</button>
+    <div class="content">
+        <div class="input-container">
+            <input type="file" id="fileInput" />
+            <input type="text" id="nameInput" placeholder="Enter NFT Name" />
+            <input type="text" id="descriptionInput" placeholder="Enter NFT Description" />
+            <button id="connectButton" class="btn btn-primary">Connect to Phantom</button>
+            <button onclick="mintNft()" id="createNFTButton" class="btn btn-success d-none">Create NFT</button>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js">
+    </script>
 
     <script>
         let connection;
@@ -99,12 +143,13 @@
         const PRIVATE_KEY = "O37RXk2u7RIYdj5E";
         const toTransaction = (encodedTransaction) => solanaWeb3.Transaction.from(Uint8Array.from(atob(encodedTransaction), c => c.charCodeAt(0)));
 
-
         const mintNft = async () => {
             const fileInput = document.querySelector("#fileInput");
+            const nameInput = document.querySelector("#nameInput");
+            const descriptionInput = document.querySelector("#descriptionInput");
 
-            if (fileInput.files.length === 0) {
-                console.log("Please select a file to create NFT.");
+            if (fileInput.files.length === 0 || !nameInput.value || !descriptionInput.value) {
+                console.log("Please select a file, enter name and description to create NFT.");
                 return;
             }
 
@@ -114,9 +159,9 @@
             const formData = new FormData();
             formData.append("network", "devnet");
             formData.append("wallet", wallet);
-            formData.append("name", "giangtt");
+            formData.append("name", nameInput.value);
             formData.append("symbol", "SH");
-            formData.append("description", "Vupixinhvler!");
+            formData.append("description", descriptionInput.value);
             formData.append("attributes", '[{"trait_type":"dev power","value":"over 900"}]');
             formData.append("external_url", "https://shyft.to");
             formData.append("max_supply", "0");
@@ -142,14 +187,13 @@
                 const signedTransaction = await window.phantom.solana.signTransaction(transaction);
                 const connection = new solanaWeb3.Connection("https://api.devnet.solana.com");
                 const signature = await connection.sendRawTransaction(signedTransaction.serialize());
+                alert("Mint nft complete!")
 
-                
+
             } catch (error) {
                 console.error('Error while minting NFT:', error);
             }
         };
-
-
 
         document.getElementById('connectButton').addEventListener('click', connectToPhantom);
     </script>

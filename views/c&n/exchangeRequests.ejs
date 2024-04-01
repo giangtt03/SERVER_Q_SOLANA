@@ -5,23 +5,129 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exchange Requests</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial';
+        }
+        /* Sidebar styles */
+        .sidebar {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #f8f9fa;
+            padding-top: 3rem;
+            overflow-y: auto;
+            z-index: 1;
+        }
+
+        .sidebar-nav-link {
+            padding: 10px;
+            color: #000;
+            text-decoration: none;
+            display: block;
+        }
+
+        .sidebar-nav-link:hover {
+            background-color: #e9ecef;
+        }
+
+        .sidebar-brand {
+            padding: 20px;
+            font-weight: bold;
+            color: #000;
+            text-decoration: none;
+        }
+
+        /* Center content */
+        .content {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        /* Style for table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* Style for buttons */
+        button {
+            padding: 5px 10px;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Exchange Requests</h1>
-    <ul>
-        <% exchangeRequests.forEach(request=> { %>
-            <li>
-                WalletId: <%= request.userId %><br>
-                Token Adress: <%= request.nftId %><br>
-                Request Time: <%= request.requestTime %><br>
-                <form id="confirmForm_<%= request._id %>" action="/confirmExchange" method="post">
-                    <input type="hidden" name="requestId" value="<%= request._id %>">
-                    <button type="button" onclick="confirmExchange('<%= request._id %>', '<%= request.nftId %>', '<%= request.userId %>')">Confirm Exchange</button>
-                </form>
-            </li>
-        <% }); %>
-    </ul>
+    <div class="sidebar">
+        <div class="sidebar-nav-link active">
+            <div style="width: 100px; height: 100px; overflow: hidden; border-radius: 50%; margin-bottom: 10px;">
+                <img src="<%= user.avatar %>" alt="User Avatar" style="width: 100%; height: auto;">
+            </div>
+            <p style="margin-bottom: 1em;">
+                <%= user.email %>
+            </p>
+        </div>
+
+        <a href="http://localhost:6002/question" class="sidebar-nav-link active">Quản lý câu hỏi</a>
+        <a href="http://localhost:6002/category" class="sidebar-nav-link">Danh sách thể loại </a>
+        <a href="http://localhost:6002/test" class="sidebar-nav-link">Quản lý quizz </a>
+        <a href="http://localhost:6002/nft" class="sidebar-nav-link">NFTs</a>
+        <a href="http://localhost:6002/api/notf/confirm" class="sidebar-nav-link">Quản lý đổi thưởng</a>
+        <a href="http://localhost:6002/api/notf/confirmH" class="sidebar-nav-link">Lịch sử xác nhận</a>
+
+    </div>
+    <div class="content">
+        <h1 style="display: flex; justify-content: center; align-items: center; margin-right: 122px;">Xác nhận yêu cầu đổi nfts</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>WalletId</th>
+                    <th>Token Address</th>
+                    <th>Request Time</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% exchangeRequests.forEach((request, index) => { %>
+                    <tr>
+                        <td><%= index + 1 %></td>
+                        <td><%= request.userId %></td>
+                        <td><%= request.nftId %></td>
+                        <td><%= request.requestTime %></td>
+                        <td>
+                            <form id="confirmForm_<%= request._id %>" action="/confirmExchange" method="post">
+                                <input type="hidden" name="requestId" value="<%= request._id %>">
+                                <% if (request.confirmed) { %>
+                                    <span>Đã xác nhận</span>
+                                <% } else { %>
+                                    <button type="button" onclick="confirmExchange('<%= request._id %>', '<%= request.nftId %>', '<%= request.userId %>')">Confirm Exchange</button>
+                                <% } %>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
 
     <script>
         function confirmExchange(requestId, nftId, userId) {
@@ -46,40 +152,39 @@
                 redirect: 'follow'
             };
 
-            // Gọi API
             fetch("https://api.shyft.to/sol/v1/nft/transfer_detach", requestOptions)
                 .then(response => response.text())
                 .then(result => {
                     console.log(result);
                     alert('NFTs transferred successfully');
+
+                    fetch("/api/notf/confirmExchange", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ requestId: requestId })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            var form = document.getElementById("confirmForm_" + requestId);
+                            form.innerHTML = "<span>Đã xác nhận</span>";
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error confirming exchange:", error);
+                        alert("Error confirming exchange");
+                    });
                 })
                 .catch(error => {
                     console.error('error', error);
                     alert('Error transferring NFTs');
                 });
         }
-        
-    //     function saveNotification(requestId, nftId, walletId) {
-        //     var xhr = new XMLHttpRequest();
-        //     xhr.open("POST", "/exchangeNFT");
-        //     xhr.setRequestHeader("Content-Type", "application/json");
-        //     xhr.onreadystatechange = function () {
-        //         if (xhr.readyState === 4 && xhr.status === 200) {
-        //             console.log(xhr.responseText);
-        //         }
-        //     };
-        //     var data = JSON.stringify({
-        //         walletId: walletId,
-        //         nftId: nftId,
-        //         requestTime: new Date().toISOString(),
-        //         content: "Vupi xinh vler" 
-        //     });
-        //     xhr.send(data);
-        // }
     </script>
-
-    
-
 </body>
 
 </html>

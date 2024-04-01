@@ -5,7 +5,8 @@ const notifTranfersSchema = new Schema({
     uId: { type: String, required: true },
     userId: { type: String, required: true },
     nftId: { type: String, required: true },
-    requestTime: { type: Date, default: Date.now }
+    requestTime: { type: Date, default: Date.now },
+    confirmed: { type: Boolean, default: false }
 });
 
 const NotifTranfers = mongoose.model('NotifTranfers', notifTranfersSchema);
