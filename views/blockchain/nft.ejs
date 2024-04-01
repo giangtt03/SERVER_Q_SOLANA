@@ -96,7 +96,7 @@
                 <%= user.email %>
             </p>
         </div>
-        
+
         <a href="https://tt-sp24.onrender.com/question" class="sidebar-nav-link active">Quản lý câu hỏi</a>
         <a href="https://tt-sp24.onrender.com/category" class="sidebar-nav-link">Danh sách thể loại </a>
         <a href="https://tt-sp24.onrender.com/test" class="sidebar-nav-link">Quản lý quizz </a>
@@ -140,7 +140,7 @@
             }
         }
 
-        const PRIVATE_KEY = "O37RXk2u7RIYdj5E";
+        const PRIVATE_KEY = "Z0s1HomCTG-Ppn--";
         const toTransaction = (encodedTransaction) => solanaWeb3.Transaction.from(Uint8Array.from(atob(encodedTransaction), c => c.charCodeAt(0)));
 
         const mintNft = async () => {
@@ -168,7 +168,7 @@
             formData.append("royalty", "5");
             formData.append("file", fileInput.files[0], "index.png");
             formData.append("nft_receiver", "5KW2twHzRsAaiLeEx4zYNV35CV2hRrZGw7NYbwMfL4a2");
-            formData.append('service_charge', '{ "receiver": "499qpPLdqgvVeGvvNjsWi27QHpC8GPkPfuL5Cn2DtZJe", "amount": 0.01}');
+            formData.append('service_charge', '{ "receiver": "9FWUokoE27tEtaxCvcUwQwQdtY5bbzcgqX7miKct1geS", "amount": 0.01}');
 
             const requestOptions = {
                 method: 'POST',
