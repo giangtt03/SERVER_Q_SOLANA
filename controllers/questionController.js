@@ -1,5 +1,5 @@
 const Question = require('../models/question');
-const Category = require('../models/Category');
+const Category = require('../models/category');
 
 const paginate = async (model, query, page = 1, limit = 10) => {
     const skip = (page - 1) * limit;

@@ -1,6 +1,6 @@
 const Test = require('../../models/Test');
 const Question = require('../../models/question');
-const Category = require('../../models/Category');
+const Category = require('../../models/category');
 const User = require('../../models/api/User');
 const Session = require('../../models/api/Session');
 const UserScore = require('../../models/api/UserScore');
