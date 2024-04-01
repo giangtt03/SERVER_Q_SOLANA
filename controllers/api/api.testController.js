@@ -1,4 +1,4 @@
-const Test = require('../../models/Test');
+const Test = require('../../models/test');
 const Question = require('../../models/question');
 const Category = require('../../models/category');
 const User = require('../../models/api/User');
