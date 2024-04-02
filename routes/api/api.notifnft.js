@@ -3,6 +3,7 @@ const router = express.Router();
 const NotifTranfers = require('../../models/api/notifTranfer');
 const User = require('../../models/api/User');
 const UserScore = require('../../models/api/UserScore');
+const userScoreController = require('../../controllers/api/api.scoreController');
 
 router.post('/exchangeNFT', async (req, res) => {
     const { userId, nftId, requestTime } = req.body;
@@ -33,8 +34,8 @@ router.post('/exchangeNFT', async (req, res) => {
         //     return res.status(400).json({ success: false, message: 'Bạn đã gửi yêu cầu đổi NFT trước đó' });
         // }
 
-        uScore.totalScore -= 200; 
-        await uScore.save();
+        const scoreToSubtract = 200;
+        await userScoreController.updateUserScoreAfterNFTExchange(userId, scoreToSubtract);
 
         return res.status(200).json({ success: true, message: 'Yêu cầu đổi NFT đã được gửi thành công' });
     } catch (error) {
@@ -78,12 +79,6 @@ router.get('/confirmH', async (req, res) => {
     try {
         const user = req.session.user;
         const confirmedRequests = await NotifTranfers.find({ confirmed: true });
-
-        for (const request of confirmedRequests) {
-            const user = await User.findById(request.uId);
-            request.username = user ? user.username : 'Unknown';
-        }
-
         res.render('c&n/confirmH', { confirmedRequests, user });
     } catch (error) {
         console.error("Error fetching confirmed exchange requests:", error);
