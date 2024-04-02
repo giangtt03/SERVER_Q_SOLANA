@@ -1,4 +1,4 @@
-const User = require('../models/user');
+const User = require('../models/User');
 const CryptoJs = require('crypto-js');
 const jwt = require('jsonwebtoken');
 
@@ -56,7 +56,7 @@ module.exports = {
 
         console.log("Data user: ", user)
 
-        res.render('question/getAllQuestions', { user: user});
+        res.render('menu', { user: user});
 
     } catch (error) {
         console.error(error);
