@@ -56,7 +56,7 @@ module.exports = {
 
         console.log("Data user: ", user)
 
-        res.render('menu', { user: user});
+        res.render('question/getAllQuestions', { user: user});
 
     } catch (error) {
         console.error(error);

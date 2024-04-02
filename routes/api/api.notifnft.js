@@ -79,6 +79,12 @@ router.get('/confirmH', async (req, res) => {
     try {
         const user = req.session.user;
         const confirmedRequests = await NotifTranfers.find({ confirmed: true });
+
+        for (const request of confirmedRequests) {
+            const user = await User.findById(request.uId);
+            request.username = user ? user.username : 'Unknown'; 
+        }
+
         res.render('c&n/confirmH', { confirmedRequests, user });
     } catch (error) {
         console.error("Error fetching confirmed exchange requests:", error);
