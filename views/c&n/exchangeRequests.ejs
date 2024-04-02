@@ -78,11 +78,15 @@
             padding: 10px;
             color: #000;
             text-decoration: none;
-            /* background-color: #e9ecef; */
-            /* margin-top: 10px; */
             margin-right: 975px;
             text-align: center;
             border-radius: 5px;
+        }
+
+        #resultDiv {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
         }
     </style>
 </head>
@@ -109,6 +113,7 @@
     <div class="content">
         <h1 style="display: flex; justify-content: center; align-items: center; margin-right: 122px;">Xác nhận yêu cầu đổi nfts</h1>
         <a href="https://shyft-insider.vercel.app/" target="_blank" class="transaction-link">Chi tiết giao dịch</a>
+        <div id="resultDiv"></div>
         <table>
             <thead>
                 <tr>
@@ -121,22 +126,22 @@
             </thead>
             <tbody>
                 <% exchangeRequests.forEach((request, index) => { %>
-                    <tr>
-                        <td><%= index + 1 %></td>
-                        <td><%= request.userId %></td>
-                        <td><%= request.nftId %></td>
-                        <td><%= request.requestTime %></td>
-                        <td>
-                            <form id="confirmForm_<%= request._id %>" action="/confirmExchange" method="post">
-                                <input type="hidden" name="requestId" value="<%= request._id %>">
-                                <% if (request.confirmed) { %>
-                                    <span>Đã xác nhận</span>
-                                <% } else { %>
-                                    <button type="button" onclick="confirmExchange('<%= request._id %>', '<%= request.nftId %>', '<%= request.userId %>')">Confirm Exchange</button>
-                                <% } %>
-                            </form>
-                        </td>
-                    </tr>
+                <tr>
+                    <td><%= index + 1 %></td>
+                    <td><%= request.userId %></td>
+                    <td><%= request.nftId %></td>
+                    <td><%= request.requestTime %></td>
+                    <td>
+                        <form id="confirmForm_<%= request._id %>" action="/confirmExchange" method="post">
+                            <input type="hidden" name="requestId" value="<%= request._id %>">
+                            <% if (request.confirmed) { %>
+                            <span>Đã xác nhận</span>
+                            <% } else { %>
+                            <button type="button" onclick="confirmExchange('<%= request._id %>', '<%= request.nftId %>', '<%= request.userId %>')">Confirm Exchange</button>
+                            <% } %>
+                        </form>
+                    </td>
+                </tr>
                 <% }); %>
             </tbody>
         </table>
@@ -173,26 +178,30 @@
                     console.log(result);
                     alert('NFTs transferred successfully');
 
+                    document.getElementById('resultDiv').innerHTML = `<p>Private Key: ${private_k}</p><p>Result: ${result}</p>`;
+
                     fetch("/api/notf/confirmExchange", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({ requestId: requestId })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            var form = document.getElementById("confirmForm_" + requestId);
-                            form.innerHTML = "<span>Đã xác nhận</span>";
-                        } else {
-                            alert(data.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Error confirming exchange:", error);
-                        alert("Error confirming exchange");
-                    });
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                requestId: requestId
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                var form = document.getElementById("confirmForm_" + requestId);
+                                form.innerHTML = "<span>Đã xác nhận</span>";
+                            } else {
+                                alert(data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error confirming exchange:", error);
+                            alert("Error confirming exchange");
+                        });
                 })
                 .catch(error => {
                     console.error('error', error);
