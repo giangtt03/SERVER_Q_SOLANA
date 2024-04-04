@@ -173,7 +173,7 @@
                 console.log(result);
                 alert('NFTs transferred successfully');
 
-                signTransaction(result.result.encoded_transaction, private_k);
+                signTransaction(result.result.recoveredTransaction, private_k);
 
                 const confirmResponse = await fetch("/api/notf/confirmExchange", {
                     method: "POST",
