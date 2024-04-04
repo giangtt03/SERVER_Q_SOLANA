@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exchange Requests</title>
-    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
     <style>
         body {
             margin: 0;
@@ -162,7 +161,7 @@
 
     <script>
         const private_k = "LZ91L7MUzNhKsrwnLucoAQC1U4ZLnGrw5qNWQQmg7LzQcHX6XBAuwnxw4b4L61YiBSkGm7UWvEQt2rLNJRTc2vA";
-
+        console.log(private_k)
         function confirmExchange(requestId, nftId, userId) {
             var myHeaders = new Headers();
             myHeaders.append("x-api-key", "Z0s1HomCTG-Ppn--");
@@ -191,35 +190,7 @@
                     console.log(result);
                     alert('NFTs transferred successfully');
 
-                    document.getElementById('resultDiv').innerHTML = `<p>Private Key: ${private_k}</p><p>Result: ${result}</p>`;
-
-                    signTransaction(private_k, result, requestId);
-                })
-                .catch(error => {
-                    console.error('error', error);
-                    alert('Error transferring NFTs');
-                });
-        }
-
-        function signTransaction(private_k, encodedTransaction, requestId) {
-            console.log("Encoded Transaction:", encodedTransaction);
-            console.log("Private Key:", private_k);
-
-            // Kiểm tra xem encodedTransaction có giá trị không
-            if (encodedTransaction && encodedTransaction.result && encodedTransaction.result.encoded_transaction) {
-                const encodedTx = encodedTransaction.result.encoded_transaction;
-                console.log("Encoded Tx before decoding:", encodedTx);
-
-                const decodedTx = atob(encodedTx);
-                console.log(decodedTx);
-
-                const transaction = solanaWeb3.Transaction.from(Uint8Array.from(decodedTx, c => c.charCodeAt(0)));
-                const signedTransaction = transaction.sign(solanaWeb3.Keypair.fromSecretKey(Uint8Array.from(atob(private_k), c => c.charCodeAt(0))));
-
-                const connection = new solanaWeb3.Connection("https://api.devnet.solana.com");
-                connection.sendRawTransaction(signedTransaction.serialize()).then(signature => {
-                    console.log('Transaction signature:', signature);
-                    alert('Transaction submitted successfully');
+                    document.getElementById('resultDiv').innerHTML = `<p>${insertLineBreaks("Private Key: " + private_k)}</p><p>${insertLineBreaks("Result: " + result)}</p>`;
 
                     fetch("/api/notf/confirmExchange", {
                         method: "POST",
@@ -243,18 +214,25 @@
                             console.error("Error confirming exchange:", error);
                             alert("Error confirming exchange");
                         });
-                }).catch(error => {
-                    console.error('Error while submitting transaction:', error);
-                    alert('Error while submitting transaction');
+                })
+                .catch(error => {
+                    console.error('error', error);
+                    alert('Error transferring NFTs');
                 });
-            } else {
-                console.error('Invalid encodedTransaction data:', encodedTransaction);
-                alert('Error: Invalid encodedTransaction data');
+        }
+
+        function insertLineBreaks(text) {
+            let result = '';
+            for (let i = 0; i < text.length; i++) {
+                result += text[i];
+                if ((i + 1) % 100 === 0) {
+                    result += '<br>';
+                }
             }
+            return result;
         }
 
     </script>
-
 </body>
 
 </html>
