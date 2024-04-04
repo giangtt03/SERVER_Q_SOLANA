@@ -10,14 +10,8 @@ const mongoose = require('mongoose');
 const favicon = require('express-favicon');
 const methodOverride = require('method-override');
 const cron = require('node-cron');
-const web3 = require('@solana/web3.js')
-// const { Keypair, Transaction, VersionedTransaction } = web3;
-const http = require('http');
 
 const app = express();
-const server = http.createServer(app);
-const io = require('socket.io')(server);
-
 const port = 3000;
 
 app.use(cors());
@@ -52,15 +46,6 @@ app.use(morgan('dev'));
 
 // ghi log cookie
 app.use(cookieParser());
-
-io.on('connection', (socket) => {
-    console.log('Client connected');
-    
-    socket.on('disconnect', () => {
-        console.log('Client disconnected');
-    });
-});
-
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -112,5 +97,3 @@ app.use('/api/notf', apiNotifnftRouter);
 
 
 app.listen(process.env.PORT || port, () => console.log(`Server listening on ${process.env.PORT}!`));
-
-module.exports = { app, server, io };
