@@ -4,6 +4,7 @@ const NotifTranfers = require('../../models/api/notifTranfer');
 const User = require('../../models/api/User');
 const UserScore = require('../../models/api/UserScore');
 const userScoreController = require('../../controllers/api/api.scoreController');
+const {io} = require('../../server');
 
 router.post('/exchangeNFT', async (req, res) => {
     const { userId, nftId, requestTime } = req.body;
@@ -36,6 +37,8 @@ router.post('/exchangeNFT', async (req, res) => {
 
         const scoreToSubtract = 200;
         await userScoreController.updateUserScoreAfterNFTExchange(userId, scoreToSubtract);
+
+        io.emit('newExchangeNFT', { userId, nftId, requestTime });
 
         return res.status(200).json({ success: true, message: 'Yêu cầu đổi NFT đã được gửi thành công' });
     } catch (error) {

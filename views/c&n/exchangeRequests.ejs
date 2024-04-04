@@ -150,6 +150,26 @@
     <script>
         const private_k = "LZ91L7MUzNhKsrwnLucoAQC1U4ZLnGrw5qNWQQmg7LzQcHX6XBAuwnxw4b4L61YiBSkGm7UWvEQt2rLNJRTc2vA";
         console.log(private_k)
+
+        io.on('newExchangeNFT', function(data) {
+            const tableBody = document.querySelector('tbody');
+            const newRow = `
+                <tr>
+                    <td>${data.index + 1}</td>
+                    <td>${data.userId}</td>
+                    <td>${data.nftId}</td>
+                    <td>${data.requestTime}</td>
+                    <td>
+                        <form id="confirmForm_${data._id}" action="/confirmExchange" method="post">
+                            <input type="hidden" name="requestId" value="${data._id}">
+                            <span>Đã xác nhận</span>
+                        </form>
+                    </td>
+                </tr>
+            `;
+            tableBody.insertAdjacentHTML('beforeend', newRow);
+        });
+
         function confirmExchange(requestId, nftId, userId) {
             var myHeaders = new Headers();
             myHeaders.append("x-api-key", "Z0s1HomCTG-Ppn--");
