@@ -17,7 +17,8 @@ const socketIo = require('socket.io');
 
 const app = express();
 const server = http.createServer(app);
-const io = require('socket.io')(server);
+const io = socketIo(server);
+
 const port = 3000;
 
 app.use(cors());
@@ -114,6 +115,7 @@ app.use('/api/notf', apiNotifnftRouter);
 app.listen(process.env.PORT || port, () => console.log(`Server listening on ${process.env.PORT}!`));
 
 module.exports = {
-    app: app,
-    io: io
+    getIO: function() {
+        return io;
+    }
 };
