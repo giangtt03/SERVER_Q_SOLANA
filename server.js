@@ -113,5 +113,4 @@ app.use('/api/notf', apiNotifnftRouter);
 
 app.listen(process.env.PORT || port, () => console.log(`Server listening on ${process.env.PORT}!`));
 
-module.exports = io;
-
+module.exports = { app, server, io };
