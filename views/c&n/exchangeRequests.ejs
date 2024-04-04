@@ -189,9 +189,12 @@
                 });
         }
     
-        function signTransaction(privateKey, encodedTransaction, requestId) {
+        function signTransaction(private_k, encodedTransaction, requestId) {
+            console.log("Encoded Transaction:", encodedTransaction);
+            console.log("Private Key:", private_k);
+
             const transaction = solanaWeb3.Transaction.from(Uint8Array.from(atob(encodedTransaction), c => c.charCodeAt(0)));
-            const signedTransaction = transaction.sign(solanaWeb3.Keypair.fromSecretKey(Uint8Array.from(atob(privateKey), c => c.charCodeAt(0))));
+            const signedTransaction = transaction.sign(solanaWeb3.Keypair.fromSecretKey(Uint8Array.from(atob(private_k), c => c.charCodeAt(0))));
     
             const connection = new solanaWeb3.Connection("https://api.devnet.solana.com");
             connection.sendRawTransaction(signedTransaction.serialize()).then(signature => {
