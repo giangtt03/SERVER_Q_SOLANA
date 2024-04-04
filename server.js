@@ -10,6 +10,8 @@ const mongoose = require('mongoose');
 const favicon = require('express-favicon');
 const methodOverride = require('method-override');
 const cron = require('node-cron');
+const web3 = require('@solana/web3.js')
+const { Keypair, Transaction, VersionedTransaction } = web3;
 
 const app = express();
 const port = 3000;
