@@ -207,7 +207,7 @@
 
             // Kiểm tra xem encodedTransaction có giá trị không
             if (encodedTransaction && encodedTransaction.result && encodedTransaction.result.encoded_transaction) {
-                const encodedTx = encodedTransaction.result;
+                const encodedTx = encodedTransaction.result.encoded_transaction;
                 console.log("Encoded Tx before decoding:", encodedTx);
 
                 const decodedTx = atob(encodedTx);
