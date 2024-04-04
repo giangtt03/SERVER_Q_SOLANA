@@ -5,11 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exchange Requests</title>
+    <script src="/socket.io/socket.io.js"></script>
     <style>
         body {
             margin: 0;
             font-family: 'Arial';
         }
+
         /* Sidebar styles */
         .sidebar {
             height: 100%;
@@ -111,7 +113,8 @@
 
     </div>
     <div class="content">
-        <h1 style="display: flex; justify-content: center; align-items: center; margin-right: 122px;">Xác nhận yêu cầu đổi nfts</h1>
+        <h1 style="display: flex; justify-content: center; align-items: center; margin-right: 122px;">Xác nhận yêu cầu
+            đổi nfts</h1>
         <a href="https://shyft-insider.vercel.app/" target="_blank" class="transaction-link">Chi tiết giao dịch</a>
         <div id="resultDiv"></div>
         <table>
@@ -125,24 +128,34 @@
                 </tr>
             </thead>
             <tbody>
-                <% exchangeRequests.forEach((request, index) => { %>
-                <tr>
-                    <td><%= index + 1 %></td>
-                    <td><%= request.userId %></td>
-                    <td><%= request.nftId %></td>
-                    <td><%= request.requestTime %></td>
-                    <td>
-                        <form id="confirmForm_<%= request._id %>" action="/confirmExchange" method="post">
-                            <input type="hidden" name="requestId" value="<%= request._id %>">
-                            <% if (request.confirmed) { %>
-                            <span>Đã xác nhận</span>
-                            <% } else { %>
-                            <button type="button" onclick="confirmExchange('<%= request._id %>', '<%= request.nftId %>', '<%= request.userId %>')">Confirm Exchange</button>
-                            <% } %>
-                        </form>
-                    </td>
-                </tr>
-                <% }); %>
+                <% exchangeRequests.forEach((request, index)=> { %>
+                    <tr>
+                        <td>
+                            <%= index + 1 %>
+                        </td>
+                        <td>
+                            <%= request.userId %>
+                        </td>
+                        <td>
+                            <%= request.nftId %>
+                        </td>
+                        <td>
+                            <%= request.requestTime %>
+                        </td>
+                        <td>
+                            <form id="confirmForm_<%= request._id %>" action="/confirmExchange" method="post">
+                                <input type="hidden" name="requestId" value="<%= request._id %>">
+                                <% if (request.confirmed) { %>
+                                    <span>Đã xác nhận</span>
+                                    <% } else { %>
+                                        <button type="button"
+                                            onclick="confirmExchange('<%= request._id %>', '<%= request.nftId %>', '<%= request.userId %>')">Confirm
+                                            Exchange</button>
+                                        <% } %>
+                            </form>
+                        </td>
+                    </tr>
+                    <% }); %>
             </tbody>
         </table>
     </div>
@@ -151,22 +164,23 @@
         const private_k = "LZ91L7MUzNhKsrwnLucoAQC1U4ZLnGrw5qNWQQmg7LzQcHX6XBAuwnxw4b4L61YiBSkGm7UWvEQt2rLNJRTc2vA";
         console.log(private_k)
 
-        io.on('newExchangeNFT', function(data) {
+        const socket = io();
+
+        socket.on('newExchangeNFT', function (data) {
             const tableBody = document.querySelector('tbody');
             const newRow = `
-                <tr>
-                    <td>${data.index + 1}</td>
-                    <td>${data.userId}</td>
-                    <td>${data.nftId}</td>
-                    <td>${data.requestTime}</td>
-                    <td>
-                        <form id="confirmForm_${data._id}" action="/confirmExchange" method="post">
-                            <input type="hidden" name="requestId" value="${data._id}">
-                            <span>Đã xác nhận</span>
-                        </form>
-                    </td>
-                </tr>
-            `;
+            <tr>
+                <td>${data.userId}</td>
+                <td>${data.nftId}</td>
+                <td>${data.requestTime}</td>
+                <td>
+                    <form id="confirmForm_${data._id}" action="/confirmExchange" method="post">
+                        <input type="hidden" name="requestId" value="${data._id}">
+                        <button type="button" onclick="confirmExchange('${data._id}', '${data.nftId}', '${data.userId}')">Confirm Exchange</button>
+                    </form>
+                </td>
+            </tr>
+        `;
             tableBody.insertAdjacentHTML('beforeend', newRow);
         });
 
@@ -202,14 +216,14 @@
                     document.getElementById('resultDiv').innerHTML = `<p>Private Key: ${private_k}</p><p>Result: ${result}</p>`;
 
                     fetch("/api/notf/confirmExchange", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify({
-                                requestId: requestId
-                            })
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            requestId: requestId
                         })
+                    })
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
