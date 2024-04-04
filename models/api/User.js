@@ -20,7 +20,6 @@ const UserSchema = new mongoose.Schema({
   },
   solanaAddress: {
     type: String,
-    unique: true,
     default: ''
   },
 });
