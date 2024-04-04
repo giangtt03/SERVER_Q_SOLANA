@@ -4,7 +4,7 @@ const NotifTranfers = require('../../models/api/notifTranfer');
 const User = require('../../models/api/User');
 const UserScore = require('../../models/api/UserScore');
 const userScoreController = require('../../controllers/api/api.scoreController');
-const { getIO } = require('../../server');
+const getIO = require('../../server');
 
 router.post('/exchangeNFT', async (req, res) => {
     const { userId, nftId, requestTime } = req.body;
