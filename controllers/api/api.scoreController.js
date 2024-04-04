@@ -14,6 +14,7 @@ module.exports = {
             // const totalScoreFromUserScore = userScore ? userScore.totalScore : 0;
 
             // const totalScore = totalScoreFromSessions + totalScoreFromUserScore;
+            const totalScore = totalScoreFromSessions;
 
             return totalScore;
         } catch (error) {
