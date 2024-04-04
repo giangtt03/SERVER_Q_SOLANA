@@ -11,13 +11,12 @@ const favicon = require('express-favicon');
 const methodOverride = require('method-override');
 const cron = require('node-cron');
 const web3 = require('@solana/web3.js')
-const { Keypair, Transaction, VersionedTransaction } = web3;
+// const { Keypair, Transaction, VersionedTransaction } = web3;
 const http = require('http');
-const socketIo = require('socket.io');
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = require('socket.io')(server);
 
 const port = 3000;
 

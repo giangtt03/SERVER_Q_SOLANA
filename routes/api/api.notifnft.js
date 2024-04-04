@@ -38,7 +38,7 @@ router.post('/exchangeNFT', async (req, res) => {
         const scoreToSubtract = 200;
         await userScoreController.updateUserScoreAfterNFTExchange(userId, scoreToSubtract);
 
-        emit('newExchangeNFT', { userId, nftId, requestTime });
+        io.emit('newExchangeNFT', { userId, nftId, requestTime });
 
         return res.status(200).json({ success: true, message: 'Yêu cầu đổi NFT đã được gửi thành công' });
     } catch (error) {
