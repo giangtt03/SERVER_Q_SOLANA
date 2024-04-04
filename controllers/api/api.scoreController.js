@@ -6,23 +6,22 @@ module.exports = {
         try {
             let totalScoreFromSessions = 0;
             const userSessions = await Session.find({ userId: userId });
-            userSessions.forEach(session => {
+            for (const session of userSessions) {
                 totalScoreFromSessions += session.score;
-            });
-
-            // const userScore = await UserScore.findOne({ userId });
-            // const totalScoreFromUserScore = userScore ? userScore.totalScore : 0;
-
-            // const totalScore = totalScoreFromSessions + totalScoreFromUserScore;
-            const totalScore = totalScoreFromSessions;
-
+            }
+    
+            const userScore = await UserScore.findOne({ userId });
+            const totalScoreFromUserScore = userScore ? userScore.totalScore : 0;
+    
+            const totalScore = totalScoreFromSessions + totalScoreFromUserScore;
+    
             return totalScore;
         } catch (error) {
             console.error("Error getting user total score:", error);
             throw error;
         }
     },
-
+    
     updateUserScoreAfterNFTExchange: async (userId, scoreToSubtract) => {
         try {
             let userScore = await UserScore.findOne({ userId });
