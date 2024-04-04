@@ -5,10 +5,15 @@ module.exports = {
     getUserTotalScore: async (userId) => {
         try {
             let totalScoreFromSessions = 0;
+            const sessionScores = new Set(); 
             const userSessions = await Session.find({ userId: userId });
             for (const session of userSessions) {
-                totalScoreFromSessions += session.score;
+                if (!sessionScores.has(session.quizId)) {
+                    totalScoreFromSessions += session.score;
+                    sessionScores.add(session.quizId); 
+                }
             }
+    
     
             const userScore = await UserScore.findOne({ userId });
             const totalScoreFromUserScore = userScore ? userScore.totalScore : 0;
