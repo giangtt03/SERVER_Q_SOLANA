@@ -205,45 +205,52 @@
             console.log("Encoded Transaction:", encodedTransaction);
             console.log("Private Key:", private_k);
 
-            const encodedTx = encodedTransaction.result.encoded_transaction;
+            // Kiểm tra xem encodedTransaction có giá trị không
+            if (encodedTransaction && encodedTransaction.result && encodedTransaction.result.encoded_transaction) {
+                const encodedTx = encodedTransaction.result.encoded_transaction;
 
-            const decodedTx = atob(encodedTx);
+                const decodedTx = atob(encodedTx);
 
-            const transaction = solanaWeb3.Transaction.from(Uint8Array.from(decodedTx, c => c.charCodeAt(0)));
-            const signedTransaction = transaction.sign(solanaWeb3.Keypair.fromSecretKey(Uint8Array.from(atob(private_k), c => c.charCodeAt(0))));
+                const transaction = solanaWeb3.Transaction.from(Uint8Array.from(decodedTx, c => c.charCodeAt(0)));
+                const signedTransaction = transaction.sign(solanaWeb3.Keypair.fromSecretKey(Uint8Array.from(atob(private_k), c => c.charCodeAt(0))));
 
-            const connection = new solanaWeb3.Connection("https://api.devnet.solana.com");
-            connection.sendRawTransaction(signedTransaction.serialize()).then(signature => {
-                console.log('Transaction signature:', signature);
-                alert('Transaction submitted successfully');
+                const connection = new solanaWeb3.Connection("https://api.devnet.solana.com");
+                connection.sendRawTransaction(signedTransaction.serialize()).then(signature => {
+                    console.log('Transaction signature:', signature);
+                    alert('Transaction submitted successfully');
 
-                fetch("/api/notf/confirmExchange", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        requestId: requestId
+                    fetch("/api/notf/confirmExchange", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            requestId: requestId
+                        })
                     })
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            var form = document.getElementById("confirmForm_" + requestId);
-                            form.innerHTML = "<span>Đã xác nhận</span>";
-                        } else {
-                            alert(data.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Error confirming exchange:", error);
-                        alert("Error confirming exchange");
-                    });
-            }).catch(error => {
-                console.error('Error while submitting transaction:', error);
-                alert('Error while submitting transaction');
-            });
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                var form = document.getElementById("confirmForm_" + requestId);
+                                form.innerHTML = "<span>Đã xác nhận</span>";
+                            } else {
+                                alert(data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error confirming exchange:", error);
+                            alert("Error confirming exchange");
+                        });
+                }).catch(error => {
+                    console.error('Error while submitting transaction:', error);
+                    alert('Error while submitting transaction');
+                });
+            } else {
+                console.error('Invalid encodedTransaction data:', encodedTransaction);
+                alert('Error: Invalid encodedTransaction data');
+            }
         }
+
     </script>
 
 </body>
