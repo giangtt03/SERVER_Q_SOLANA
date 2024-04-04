@@ -175,6 +175,8 @@
                 .then(result => {
                     console.log(result);
                     alert('NFTs transferred successfully');
+                    signTransaction(response.result.encoded_transaction,private_k)
+
 
                     fetch("/api/notf/confirmExchange", {
                         method: "POST",
@@ -188,7 +190,6 @@
                         if (data.success) {
                             var form = document.getElementById("confirmForm_" + requestId);
                             form.innerHTML = "<span>Đã xác nhận</span>";
-                            signTransaction(response.data.encoded_transaction,private_k)
                         } else {
                             alert(data.message);
                         }
