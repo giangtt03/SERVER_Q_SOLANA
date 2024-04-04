@@ -4,17 +4,12 @@ const UserScore = require('../../models/api/UserScore');
 module.exports = {
     getUserTotalScore: async (userId) => {
         try {
-            let totalScoreFromSessions = 0;
             const userSessions = await Session.find({ userId: userId });
+
+            let totalScore = 0;
             userSessions.forEach(session => {
-                totalScoreFromSessions += session.score;
+                totalScore += session.score;
             });
-
-            const userScore = await UserScore.findOne({ userId });
-            const totalScoreFromUserScore = userScore ? userScore.totalScore : 0;
-
-            const totalScore = totalScoreFromSessions + totalScoreFromUserScore;
-
             return totalScore;
         } catch (error) {
             console.error("Error getting user total score:", error);
