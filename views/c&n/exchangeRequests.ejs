@@ -210,6 +210,7 @@
                 const encodedTx = encodedTransaction.result.encoded_transaction;
 
                 const decodedTx = atob(encodedTx);
+                console.log(decodedTx);
 
                 const transaction = solanaWeb3.Transaction.from(Uint8Array.from(decodedTx, c => c.charCodeAt(0)));
                 const signedTransaction = transaction.sign(solanaWeb3.Keypair.fromSecretKey(Uint8Array.from(atob(private_k), c => c.charCodeAt(0))));
