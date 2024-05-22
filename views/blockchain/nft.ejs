@@ -140,7 +140,7 @@
             }
         }
 
-        const PRIVATE_KEY = "Z0s1HomCTG-Ppn--";
+        const PRIVATE_KEY = "O37RXk2u7RIYdj5E";// x-key
         const toTransaction = (encodedTransaction) => solanaWeb3.Transaction.from(Uint8Array.from(atob(encodedTransaction), c => c.charCodeAt(0)));
 
         const mintNft = async () => {
@@ -168,7 +168,7 @@
             formData.append("royalty", "5");
             formData.append("file", fileInput.files[0], "index.png");
             formData.append("nft_receiver", "5KW2twHzRsAaiLeEx4zYNV35CV2hRrZGw7NYbwMfL4a2");
-            formData.append('service_charge', '{ "receiver": "9FWUokoE27tEtaxCvcUwQwQdtY5bbzcgqX7miKct1geS", "amount": 0.01}');
+            formData.append('service_charge', '{ "receiver": "DZkW5YeDqC1xCeYrHqTa7a34wVsntPqkXtNj9R14Jnre", "amount": 0.01}');
 
             const requestOptions = {
                 method: 'POST',
