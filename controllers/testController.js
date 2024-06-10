@@ -54,7 +54,7 @@ module.exports = {
         try {
             const user = req.session.user;
             const categories = await Category.find();
-            res.render('test/create', { categories, user });
+            res.render('test/createTest', { categories, user });
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
