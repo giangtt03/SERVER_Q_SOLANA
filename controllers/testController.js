@@ -26,7 +26,6 @@ module.exports = {
 
     createTest: async (req, res) => {
         try {
-            const user = req.session.user;
             const { name, image, category, questions } = req.body; 
             console.log("question: ", questions);
 
@@ -45,11 +44,22 @@ module.exports = {
                 questions: selectedQuestions,
             });
             const savedTest = await newTest.save();
-            res.render('test/create', { user, savedTest });
+            res.json(savedTest);
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
     },
+
+    renderCreateTest: async (req, res) => {
+        try {
+            const user = req.session.user;
+            const categories = await Category.find();
+            res.render('test/create', { categories, user });
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    },
+
 
     getTestById: async (req, res) => {
         try {
