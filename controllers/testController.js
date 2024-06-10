@@ -45,7 +45,7 @@ module.exports = {
                 questions: selectedQuestions,
             });
             const savedTest = await newTest.save();
-            res.json({savedTest, user});
+            res.render('test/create', { user, savedTest });
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
