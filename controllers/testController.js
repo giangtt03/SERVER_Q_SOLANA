@@ -52,8 +52,9 @@ module.exports = {
 
     renderCreateTest: async (req, res) => {
         try {
-            const user = req.session.user;
+            // const user = req.session.user;
             const categories = await Category.find();
+            let user = req.session.user || {};
             res.render('test/createTest', { categories, user });
         } catch (error) {
             res.status(500).json({ message: error.message });
