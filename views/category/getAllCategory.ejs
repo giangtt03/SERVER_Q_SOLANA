@@ -1,24 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Categories</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <!-- Google Font for Pixel Style -->
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
-            font-family: 'Press Start 2P', cursive;
+            font-family: 'VT323', monospace;
             background-color: #f0f0f0;
         }
 
         /* Sidebar styles */
-
         .sidebar {
             height: 100%;
             width: 250px;
@@ -29,7 +26,6 @@
             padding-top: 3rem;
             overflow-y: auto;
             z-index: 1;
-            font-family: 'Press Start 2P', cursive;
         }
 
         .sidebar-nav-link {
@@ -37,6 +33,7 @@
             color: #000;
             text-decoration: none;
             display: block;
+            font-family: 'VT323', monospace;
         }
 
         .sidebar-nav-link:hover {
@@ -48,6 +45,20 @@
             font-weight: bold;
             color: #000;
             text-decoration: none;
+            font-family: 'VT323', monospace;
+        }
+
+        /* Container styles */
+        .container {
+            margin-left: 270px;
+            padding: 20px;
+        }
+
+        h1 {
+            font-family: 'VT323', monospace;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 30px;
         }
 
         /* Table styles */
@@ -55,62 +66,100 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-            font-family: 'Press Start 2P', cursive;
         }
 
         th,
         td {
-            padding: 8px;
+            padding: 12px;
             text-align: center;
-            border-bottom: 1px solid #ddd;
-            border-right: 1px solid #ddd;
+            border: 1px solid #ddd;
             word-wrap: break-word;
             background-color: #f2f2f2;
-            max-width: 400px;
         }
 
         thead {
-            background-color: #f2f2f2;
+            background-color: #e9ecef;
+        }
+
+        th {
+            font-size: 14px;
+            font-family: 'VT323', monospace;
+        }
+
+        td {
+            font-size: 12px;
+            font-family: 'VT323', monospace;
+        }
+
+        .btn-sm {
+            font-size: 12px;
+            font-family: 'VT323', monospace;
+        }
+
+        .form-control {
+            font-size: 12px;
+            font-family: 'VT323', monospace;
+        }
+
+        /* Pixel button styles */
+        .pixel-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            font-family: 'VT323', monospace;
+            font-size: 12px;
+            color: #fff;
+            background-color: #000;
+            text-transform: uppercase;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            border: 2px solid #000;
+            box-shadow: 4px 4px 0 #888;
+            transition: all 0.1s ease-in-out;
+        }
+
+        .pixel-btn:hover {
+            box-shadow: 2px 2px 0 #888;
+            transform: translate(2px, 2px);
+        }
+
+        .pixel-btn:active {
+            box-shadow: none;
+            transform: translate(4px, 4px);
         }
     </style>
 </head>
 
 <body>
     <div class="sidebar">
-        <!-- <a href="#" id="menuToggle" class="sidebar-nav-link">
-            <i id="menuIcon" class="fas fa-bars"></i>
-        </a> -->
         <div class="sidebar-nav-link active">
             <div style="width: 100px; height: 100px; overflow: hidden; border-radius: 50%; margin-bottom: 10px;">
                 <img src="<%= user.avatar %>" alt="User Avatar" style="width: 100%; height: auto;">
             </div>
-            <p style="margin-bottom: 1em;">
-                <%= user.email %>
-            </p>
+            <p style="margin-bottom: 1em;"><%= user.email %></p>
         </div>
 
         <a href="https://tt-sp24.onrender.com/question" class="sidebar-nav-link active">Quản lý câu hỏi</a>
-        <a href="https://tt-sp24.onrender.com/category" class="sidebar-nav-link">Danh sách thể loại </a>
-        <a href="https://tt-sp24.onrender.com/test" class="sidebar-nav-link">Quản lý quizz </a>
+        <a href="https://tt-sp24.onrender.com/category" class="sidebar-nav-link">Danh sách thể loại</a>
+        <a href="https://tt-sp24.onrender.com/test" class="sidebar-nav-link">Quản lý quizz</a>
         <a href="https://tt-sp24.onrender.com/nft" class="sidebar-nav-link">NFTs</a>
         <a href="https://tt-sp24.onrender.com/api/notf/confirm" class="sidebar-nav-link">Quản lý đổi thưởng</a>
         <a href="https://tt-sp24.onrender.com/api/notf/confirmH" class="sidebar-nav-link">Lịch sử xác nhận</a>
-
     </div>
+
     <h1 class="text-center mt-5">Danh sách thể loại</h1>
 
     <div class="container mt-5">
-
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <a href="/category/create">Thêm danh mục</a>
+            <a href="/category/create" class="pixel-btn">Thêm danh mục</a>
         </div>
 
         <div class="mb-3">
-            <input type="text" id="searchInput" class="form-control" placeholder="Search by category name"
-                onkeyup="searchCategories()">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search by category name" onkeyup="searchCategories()">
         </div>
 
-        <table id="categoryTable" class="table">
+        <table id="categoryTable" class="table table-striped">
             <thead>
                 <tr>
                     <th>STT</th>
@@ -119,51 +168,24 @@
                 </tr>
             </thead>
             <tbody>
-                <% categories.forEach((category, index)=> { %>
+                <% categories.forEach((category, index) => { %>
                     <tr>
+                        <td><%= index + 1 %></td>
+                        <td><%= category.name %></td>
                         <td>
-                            <%= index + 1 %>
-                        </td>
-                        <td>
-                            <%= category.name %>
-                        </td>
-                        <td>
-                            <a href="/category/update/<%= category._id %>" class="btn btn-info btn-sm"><i
-                                    class="far fa-edit"></i></a>
-                            <!-- <form id="deleteCategoryForm_<%= category._id %>" method="POST"
-                                onsubmit="event.preventDefault(); deleteCategory('<%= category._id %>')">
-                                <input type="hidden" name="_method" value="DELETE">
-                                <button type="submit" class="btn btn-danger btn-sm"><i
-                                        class="far fa-trash-alt"></i></button>
-                            </form> -->
+                            <a href="/category/update/<%= category._id %>" class="pixel-btn btn-info btn-sm">
+                                <i class="far fa-edit"></i>
+                            </a>
                         </td>
                     </tr>
-                    <% }); %>
+                <% }); %>
             </tbody>
         </table>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Font Awesome -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
     <script>
-        // function deleteCategory(categoryId) {
-        //     fetch(`/category/delete/${categoryId}`, {
-        //         method: 'DELETE',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //         },
-        //     })
-        //         .then(response => response.json())
-        //         .then(data => {
-        //             console.log(data);
-        //             window.location.href = '/category';
-        //         })
-        //         .catch(error => {
-        //             console.error('Error deleting category:', error);
-        //         });
-        // }
-
         function searchCategories() {
             var input, filter, table, tr, td, i, txtValue;
             input = document.getElementById("searchInput");
@@ -183,27 +205,6 @@
                 }
             }
         }
-
-    //     document.addEventListener("DOMContentLoaded", function() {
-    //     var menuToggle = document.getElementById('menuToggle');
-    //     var sidebar = document.querySelector('.sidebar');
-    //     var menuIcon = document.getElementById('menuIcon');
-
-    //     var isMenuVisible = true;
-
-
-    //     menuToggle.addEventListener('click', function() {
-    //         if (isMenuVisible) {
-    //             sidebar.style.width = '0';
-    //             menuIcon.className = 'fas fa-bars';
-    //             isMenuVisible = false;
-    //         } else {
-    //             sidebar.style.width = '250px';
-    //             menuIcon.className = 'fas fa-times';
-    //             isMenuVisible = true;
-    //         }
-    //     });
-    // });
     </script>
 </body>
 

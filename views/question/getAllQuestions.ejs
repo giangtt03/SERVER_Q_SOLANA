@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
 <head>
     <meta charset="UTF-8">
@@ -9,7 +9,7 @@
     <style>
         body {
             margin: 0;
-            font-family: 'Arial';
+            font-family: 'VT323', monospace;
             display: flex;
         }
 
@@ -74,7 +74,34 @@
 
         td {
             max-width: 600px;
+        }
 
+        /* Pixel button styles */
+        .pixel-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            font-family: 'VT323', monospace;
+            font-size: 12px;
+            color: #fff;
+            background-color: #000;
+            text-transform: uppercase;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            border: 2px solid #000;
+            box-shadow: 4px 4px 0 #888;
+            transition: all 0.1s ease-in-out;
+        }
+
+        .pixel-btn:hover {
+            box-shadow: 2px 2px 0 #888;
+            transform: translate(2px, 2px);
+        }
+
+        .pixel-btn:active {
+            box-shadow: none;
+            transform: translate(4px, 4px);
         }
     </style>
 </head>
@@ -108,15 +135,15 @@
                 <!-- Form lọc theo danh mục -->
                 <form id="categoryFilterForm" method="POST">
                     <label for="categorySelect">Chọn danh mục:</label>
-                    <select id="categorySelect" name="category">
+                    <select id="categorySelect" name="category" class="pixel-btn">
                         <% categories.forEach(category=> { %>
                             <option value="<%= category._id %>">
                                 <%= category.name %>
                             </option>
                             <% }); %>
                     </select>
-                    <button type="submit">Lọc</button>
-                    <a style="display: flex;" href="https://tt-sp24.onrender.com/question/create">Thêm câu hỏi</a>
+                    <button type="submit" class="pixel-btn">Lọc</button>
+                    <a style="display: flex;" href="https://tt-sp24.onrender.com/question/create" class="pixel-btn">Thêm câu hỏi</a>
 
                 </form>
 
@@ -155,7 +182,7 @@
                                     </td>
                                     <td>
                                         <form action="/question/update/<%= question._id %>" method="GET">
-                                            <button type="submit">Update</button>
+                                            <button type="submit" class="pixel-btn">Update</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -168,16 +195,16 @@
                     <ul class="pagination justify-content-center">
                         <% if (currentPage> 1) { %>
                             <li class="page-item">
-                                <a class="page-link" href="?page=1">First</a>
+                                <a class="page-link pixel-btn" href="?page=1">First</a>
                             </li>
                             <li class="page-item">
-                                <a class="page-link" href="?page=<%= currentPage - 1 %>">Previous</a>
+                                <a class="page-link pixel-btn" href="?page=<%= currentPage - 1 %>">Previous</a>
                             </li>
                             <% } %>
 
                                 <% for (let i=1; i <=totalPages; i++) { %>
                                     <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-                                        <a class="page-link" href="?page=<%= i %>">
+                                        <a class="page-link pixel-btn" href="?page=<%= i %>">
                                             <%= i %>
                                         </a>
                                     </li>
@@ -185,16 +212,14 @@
 
                                         <% if (currentPage < totalPages) { %>
                                             <li class="page-item">
-                                                <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
+                                                <a class="page-link pixel-btn" href="?page=<%= currentPage + 1 %>">Next</a>
                                             </li>
                                             <li class="page-item">
-                                                <a class="page-link" href="?page=<%= totalPages %>">Last</a>
+                                                <a class="page-link pixel-btn" href="?page=<%= totalPages %>">Last</a>
                                             </li>
                                             <% } %>
                     </ul>
                 </nav>
-
-
     </main>
 
     <script>
@@ -217,7 +242,8 @@
                 const newRow = document.createElement('tr');
                 newRow.innerHTML = `
             <td>${index}</td>
-            <td>${question.content}</td>
+            <td>${question.content}</
+
             <td>${question.category.name}</td>
             <td>
                 <ul>
