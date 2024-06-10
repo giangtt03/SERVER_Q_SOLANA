@@ -26,6 +26,7 @@ module.exports = {
 
     createTest: async (req, res) => {
         try {
+            const user = req.session.user;
             const { name, image, category, questions } = req.body; 
             console.log("question: ", questions);
 
@@ -44,7 +45,7 @@ module.exports = {
                 questions: selectedQuestions,
             });
             const savedTest = await newTest.save();
-            res.json(savedTest);
+            res.json({savedTest, user});
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
