@@ -12,7 +12,7 @@
         body {
             margin: 0;
             font-family: 'VT323', monospace;
-            background-color: #f0f0f0;
+            background-color: transparent;
         }
 
         /* Sidebar styles */
@@ -37,7 +37,7 @@
         }
 
         .sidebar-nav-link:hover {
-            background-color: #e9ecef;
+            background-color: transparent;
         }
 
         .sidebar-brand {
@@ -61,7 +61,6 @@
             font-size: 30px;
         }
 
-        /* Table styles */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -74,20 +73,24 @@
             text-align: center;
             border: 1px solid #ddd;
             word-wrap: break-word;
-            background-color: #f2f2f2;
         }
 
-        thead {
-            background-color: #e9ecef;
+        thead tr {
+            background-color: #f0f0f0;
+        }
+
+        tbody tr,
+        tbody td {
+            background-color: transparent !important;
         }
 
         th {
-            font-size: 18px; 
+            font-size: 18px;
             font-family: 'VT323', monospace;
         }
 
         td {
-            font-size: 16px; 
+            font-size: 16px;
             font-family: 'VT323', monospace;
         }
 
@@ -159,7 +162,7 @@
             <input type="text" id="searchInput" class="form-control" placeholder="Search by category name" onkeyup="searchCategories()">
         </div>
 
-        <table id="categoryTable" class="table table-striped">
+        <table id="categoryTable" class="">
             <thead>
                 <tr>
                     <th>STT</th>
